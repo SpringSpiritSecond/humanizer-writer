@@ -1,0 +1,34 @@
+{
+  "note": "自写示例，品牌“松小鹿”和所有数字都是虚构的，只用于 detect/ 的测试。ai_tone 是故意写成 AI 腔的稿子，natural 是“不该改”的自然写法。",
+  "line": "口播",
+  "brief": {
+    "id": "vo-sample-01",
+    "line": "口播",
+    "facts": [
+      { "field": "价格", "value": "199 元", "must_match": true },
+      { "field": "重量", "value": "180 克", "must_match": true }
+    ],
+    "must_include": {
+      "brand_terms": ["松小鹿", "与其硬扛，不如松一下"],
+      "cta": "点下面小黄车"
+    },
+    "must_not": ["治疗", "根治"],
+    "audience": "久坐上班族",
+    "speaker": "真人出镜，口语",
+    "target": { "duration_sec": 45, "chars_per_min": null }
+  },
+  "ai_tone": [
+    {
+      "id": "vo-ai-01",
+      "text": "在这个快节奏的时代，你是否也常常感到疲惫？\n这不是一款普通的按摩仪，而是你的私人理疗师。我们对每一个细节都进行了反复打磨，为你打造极致的放松体验。\n核心是：深层放松。\n更轻、更静、更贴合。无论是办公室，还是卧室，亦或是旅途中，它都能陪伴你。\n精挑细选，匠心打造，品质如一。专业设计，贴心呵护，安心之选。\n它的震动——温柔而有力——直达肌肉深处。\n肩颈被久坐压垮，情绪被工作填满。\n你值得拥有的专属的高端的放松时光，属于你的独一无二的贴心的陪伴。\n为什么它能做到？因为我们深耕十年。凭什么它值得信赖？因为口碑说话。\n让我们一起拥抱更美好的未来，因为放松，本身就是一种生活态度。",
+      "expect": ["cliche_opening", "not_x_but_y", "jinxing_verb", "colon_conclusion", "triple_parallel", "four_char_parallel", "dash", "bei_stack", "de_stacking", "rhetorical_question", "cliche_ending", "punchline_ending"]
+    }
+  ],
+  "natural": [
+    {
+      "id": "vo-nat-01",
+      "text": "家人们，你是不是一坐就是一整天，下班脖子硬得转不动？你说气不气？我反正挺气。\n我也是。所以今天给你们看这个：松小鹿肩颈按摩仪。\n更轻 180 克、更久 7 天、更静 35 分贝，这三个数我都自己试过。\n你问贵不贵？到手 199 元。\n首先说清楚，它不是医疗器械，治不了病。其次，它就是让你下班那十分钟舒服点。\n对，就十分钟。十分钟，够了。买它，买它，买它。\n点下面小黄车，今晚八点前下单送收纳包。\n与其硬扛，不如松一下。",
+      "covers": ["spoken_rhetorical_question", "spoken_triple", "short_repeat", "slogan_verbatim", "keep_connectives"]
+    }
+  ]
+}
