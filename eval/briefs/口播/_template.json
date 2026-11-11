@@ -1,0 +1,23 @@
+{
+  "id": "vo-001",
+  "line": "口播",
+  "source": {
+    "human_original": "原稿文件路径（只有管理员能看）",
+    "rights": "授权说明：自家作品 / 已取得授权",
+    "platform": "抖音 / 视频号 / B 站 / 小红书"
+  },
+  "facts": [
+    { "field": "价格", "value": "原样写法，例如 199 元", "must_match": true }
+  ],
+  "must_include": {
+    "brand_terms": ["品牌名", "slogan 原文"],
+    "cta": "行动号召原文"
+  },
+  "must_not": ["竞品名", "未经确认的功效或承诺"],
+  "audience": "目标受众",
+  "speaker": "谁来讲：真人出镜 / 画外音；讲话风格",
+  "target": {
+    "duration_sec": 60,
+    "chars_per_min": "按自家配音实测填写，未测时先留空"
+  }
+}
