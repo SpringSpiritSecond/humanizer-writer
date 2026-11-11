@@ -1,0 +1,27 @@
+{
+  "id": "dlg-001",
+  "line": "台词",
+  "source": {
+    "human_original": "原稿文件路径（只有管理员能看）",
+    "rights": "授权说明：自家作品 / 已取得授权",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "前情：一两句话",
+    "location_time": "地点与时间",
+    "characters": [
+      { "name": "角色名", "profile": "身份、说话习惯、口头禅", "want": "这场戏想要什么" }
+    ],
+    "scene_goal": "这场戏要完成什么",
+    "conflict": "冲突在哪里",
+    "beats": ["beat 1", "beat 2", "beat 3"]
+  },
+  "locked": {
+    "lines": ["必须原样保留的台词或金句"],
+    "props_and_names": ["必须出现的道具、人名、地名"]
+  },
+  "target": {
+    "duration_sec": 90,
+    "format": "统一剧本格式：角色名：台词；（动作线）"
+  }
+}

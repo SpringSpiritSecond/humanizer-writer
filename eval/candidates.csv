@@ -1,0 +1,23 @@
+id,来源,路径,许可证,星标_2026-11-11,最近推送,槽位,台词,口播,进比赛,备注
+baseline-none,—,—,—,,,A/B,是,是,对照,不加任何 skill
+baseline-oneline,—,—,—,,,A,是,是,对照,生成时只加一句“写得自然，别像 AI”
+human-writing,KKKKhazix/human-writing,human-writing/SKILL.md,MIT,4530,2026-11-08,A/B,是,是,是,活人感写作；中文原创规则，既能写也能改，覆盖小说和口播；材料不够会提问，评测时要关掉提问；自带 check_prose.py
+human-writing-lite,KKKKhazix/human-writing,human-writing/dist/human-writing-lite.md,MIT,4530,2026-11-08,A/B,是,是,是,上一条的精简版，看规则缩短后效果会不会变差
+humanizer-zh,op7418/Humanizer-zh,SKILL.md,MIT,22532,2026-09-23,B,是,是,是,blader v3.0.0 的汉化，加了 F 组 6 条中文规则；上游已到 v4，它没跟进；本机 ~/.claude/skills/humanizer-zh 与此逐字相同
+qu-ai-wei,LifelongLazyLearner/qu-ai-wei,,MIT,746,2026-09-10,B,是,是,是,受 humanizer 启发后重写，不是直译；吸收了 yage.ai 的翻译腔规则；每条模式带保留条件
+shuorenhua,MrGeDiao/shuorenhua,skills/shuorenhua/SKILL.md,MIT,2580,2026-11-10,B/C,是,是,是,自带三档改动范围；“写平实”模式已知会改过头
+humanizer-zh-next,Hyacehila/humanizer-zh-next,,MIT,248,2026-10-25,B,否,是,是,商务、学术分支，和台词关系不大
+ai-zixun-humanizer-zh,ai-zixun/humanizer-zh,,MIT,215,2026-05-22,B,否,是,是,与 op7418 同名，不是同一个项目；侧重翻译腔
+stop-slop,hardikpandya/stop-slop,,MIT,18839,2026-03-17,A,是,是,是,英文 skill，没有中文实测
+story-deslop,zenstory-ai/oh-story-claudecode,skills/story-deslop/SKILL.md,MIT,8505,2026-11-11,B,是,否,是,先跑脚本匹配，再让 Agent 改写
+drama-skills-dialogue,zenstory-ai/drama-skills,,MIT,4084,2026-11-10,A,是,否,是,台词规则：能演的就不说，画面已经证明的不复述
+shanyin-redlines,Shanyin-ai/shanyin-screenwriting-master,,MIT,1477,2026-04-01,A,是,否,是,写作红线：禁止解释性台词
+sw-dialogue,jtydhr88/screenwriting-skills,,MIT（引用的原书片段除外）,2030,2026-10-03,A,是,否,是,三层潜台词；引用的原书片段不能放进仓库
+drama-humanizer,adoria111/emma-screenwriting-skills,,MIT,7,2026-11-07,B,是,否,是,锁住剧情和金句，只改措辞；Beta 版，未做跨模型实测
+dsh-deai-audit,zz12hui/dsh-deai-audit,,MIT,1,2026-10-26,B,否,是,待定,新仓库；先读一遍再决定
+sean-copy-style,内部,projects/Sean_media/docs/skills/sean-copy-style/SKILL.md,内部,,,A/B,否,是,待定,文件未找到
+blader-humanizer,blader/humanizer,,MIT,67698,2026-11-10,B,是,是,待定,英文；v4.0.0 允许补“真实细节”，和事实检查冲突
+iskill-copy-deslop,aispin/iskill-copy-deslop,,无,0,2026-10-09,B,否,是,否,未声明许可证
+de-ai-prompt-enhancer,OUBIGFA/De-AI-Prompt-Enhancer-Writer-Booster-SKILL,,无,966,2026-09-17,A/B,是,是,否,未声明许可证
+ai-flavor-remover,hylarucoder/ai-flavor-remover,,无,1203,2025-04-02,B,是,是,否,未声明许可证；推荐的替代过渡语本身就带 AI 腔
+lieflat-less-ai-tone,larashero3-dotcom/lieflat-less-ai-tone,,CC BY-NC 4.0,7305,2026-11-05,B,是,是,否,商用要先拿到授权；目前只借用配对的方法
