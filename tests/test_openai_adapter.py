@@ -85,6 +85,12 @@ def test_reasoning_and_openrouter_usage_flag(monkeypatch):
     assert sent[0]["temperature"] == 1.0
 
 
+def test_reasoning_effort_for_other_gateways(monkeypatch):
+    ad, sent = make(monkeypatch, [ok("x")], reasoning_effort="low")
+    ad.generate({"line": "口播", "brief": BRIEF}, 1)
+    assert sent[0]["reasoning_effort"] == "low" and "reasoning" not in sent[0] and "usage" not in sent[0]
+
+
 def test_retry_then_success(monkeypatch):
     err = urllib.error.HTTPError("u", 429, "rate", {}, None)
     ad, sent = make(monkeypatch, [err, ok("x")])

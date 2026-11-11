@@ -80,9 +80,14 @@ class OpenAICompatAdapter(ModelAdapter):
         for k in ("temperature", "max_tokens", "top_p"):
             if p.get(k) is not None:
                 body[k] = p[k]
+        openrouter = "openrouter.ai" in self.base_url
         if p.get("reasoning_effort"):
-            body["reasoning"] = {"effort": p["reasoning_effort"]}
-        if "openrouter.ai" in self.base_url:
+            # OpenRouter 用 reasoning.effort；其他 OpenAI 兼容网关（RelayRouter 等）用 reasoning_effort
+            if openrouter:
+                body["reasoning"] = {"effort": p["reasoning_effort"]}
+            else:
+                body["reasoning_effort"] = p["reasoning_effort"]
+        if openrouter:
             body["usage"] = {"include": True}
         body.update(p.get("extra_body") or {})
         return body
