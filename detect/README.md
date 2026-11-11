@@ -40,7 +40,7 @@ from detect.stages import s2, g3   # 配置里写 "S2": "detect.stages:s2", "G3"
 
 | id | 档位 | 台词默认 | 口播默认 | 怎么判 |
 |---|---|---|---|---|
-| `not_x_but_y` | 单次即标 | on | on | 不是……而是、并非……而是、与其……不如、不仅是……更是、不在于……而在于 |
+| `not_x_but_y` | 单次即标 | on | on | 不是……而是、并非……而是、与其……不如、不在于……而在于，以及 不仅（仅）/ 不只 / 不单（单）/ 不光 是……而是 / 更是；“不仅……还 / 也 / 而且”这类正常递进不算 |
 | `jinxing_verb` | 单次即标 | on | on | “进行(了/着)(一次/一番…)”后面紧跟两个汉字；排除 进行到 / 进行中 / 进行曲 / 进行的 等 |
 | `cliche_opening` | 单次即标 | on | on | 只看每段第一句的开头：随着……的发展、在这个……的时代、众所周知、近年来 等 |
 | `cliche_ending` | 单次即标 | on | on | 只看全文最后两句：总之、让我们一起、未来可期、开启……新篇章、拥抱……未来 等 |
@@ -74,7 +74,7 @@ from detect.stages import s2, g3   # 配置里写 "S2": "detect.stages:s2", "G3"
 | 台词 | `unfinished_line` | 以 …… 或 —— 结尾的句子，不参与收尾类规则（`cliche_ending`、`punchline_ending`）；以省略号收住的排比也不标 |
 | 台词 | `catchphrase_repeat` | 三个一模一样的分句（“得嘞，得嘞，得嘞”）不算排比，`triple_parallel` 和 `four_char_parallel` 都放行。G3 的用词多样性本来就是“越重复越低”，不会因为口头禅而被判成换词过勤 |
 | 台词 | `short_fragment` | 所在句子 ≤4 个字的命中一律不报（“去哪？回家。”不算自问自答） |
-| 台词 | `children_screen_recap`、`action_line_adverbs`、`first_episode` | 不对应任何 S2 规则（复述画面、缓缓 / 微微、极限词都不在第一批 id 里），检测器什么都不做；样本里留了这些写法，确认不会误报 |
+| 台词 | `children_screen_recap`、`action_line_adverbs`、`first_episode` | 不归 S2 管，检测器什么都不做：`first_episode` 归 G1 合规，`children_screen_recap` 和 `action_line_adverbs` 留给 S3 和以后的语义规则。样本里留了这些写法，确认不会误报 |
 | 口播 | `spoken_rhetorical_question` | 问句里带“你 / 您 / 大家 / 家人们 / 姐妹们”这类对观众说话的词时，不算设问；“为什么它能做到？因为……”这种自问自答仍然报，只是 profile 里是 hint |
 | 口播 | `spoken_triple` | 三项里至少两项带数字或量词（180 克、7 天、35 分贝）时，不算硬凑三点 |
 | 口播 | `short_repeat` | 同 `catchphrase_repeat`：一模一样的重复（“买它，买它，买它”）不算排比 |
@@ -95,9 +95,9 @@ from detect.stages import s2, g3   # 配置里写 "S2": "detect.stages:s2", "G3"
 | `paragraph_len_cv` | `uniform_length` | 段长的变异系数 | 少于 3 段 |
 | `char_mattr` | `synonym_rotation` | 字级 MATTR（滑动窗口 50 字的平均型例比） | 少于 100 字 |
 | `bigram_mattr` | `synonym_rotation` | 字二元组的 MATTR，窗口 50 | 少于 100 字 |
-| `batch_distinct_2`、`batch_distinct_3` | 无，只记录 | 当前稿和 `batch_texts` 合起来，字二元组 / 三元组的不重复比例 | 合格的稿子不到 2 份；字数少于 20 的稿子不参与 |
-| `batch_self_bleu` | 无，只记录 | 每份稿子对其余稿子算字级 BLEU-4（n>1 加一平滑），取平均；越高说明越雷同 | 同上 |
-| `batch_bleu_current` | 无，只记录 | 当前稿对其余稿子的 BLEU-4 | 同上 |
+| `batch_distinct_2`、`batch_distinct_3` | `batch_diversity`（阈值用 `min`） | 当前稿和 `batch_texts` 合起来，字二元组 / 三元组的不重复比例 | 合格的稿子不到 2 份；字数少于 20 的稿子不参与 |
+| `batch_self_bleu` | `batch_diversity`（阈值用 `max`） | 每份稿子对其余稿子算字级 BLEU-4（n>1 加一平滑），取平均；越高说明越雷同 | 同上 |
+| `batch_bleu_current` | `batch_diversity`（阈值用 `max`） | 当前稿对其余稿子的 BLEU-4 | 同上 |
 
 另有 `chars`、`sentences`、`paragraphs` 几个计数，`exceeded`（超标的指标名），以及 `skipped_thresholds`（给了阈值但没检查的指标，原因可能是规则 off、指标为 null，或者指标名不认识）。
 
@@ -121,7 +121,9 @@ from detect.stages import s2, g3   # 配置里写 "S2": "detect.stages:s2", "G3"
 - 规则是 `hint`：附上 `hint` 级命中，但不打回，`verdict` 仍是 `pass`。
 - 规则是 `off`：不检查，记进 `skipped_thresholds`。
 
-命中位置：密度类指标给出每个计数位置；句长、段长过匀给出长度最接近的那一串连续句子或段落（至少 3 个，找不到就给全文）；用词多样性给全文。轮数上限由 runner 按槽位 D 控制，G3 不管。
+`batch_diversity` 是新增的规则 id（计量，约定文档 3.2 节的表由主会话补）。两条线的 profile 里都没写它，所以按 `on` 处理。
+
+命中位置：密度类指标给出每个计数位置；批次内多样性给全文；句长、段长过匀给出长度最接近的那一串连续句子或段落（至少 3 个，找不到就给全文）；用词多样性给全文。轮数上限由 runner 按槽位 D 控制，G3 不管。
 
 **现在没有任何默认阈值。** 设计文档规定，阈值要等工作台的人工盲审数据回来再校准，在那之前 G3 只记录。
 
@@ -137,5 +139,5 @@ from detect.stages import s2, g3   # 配置里写 "S2": "detect.stages:s2", "G3"
 
 - **没有分词。** 只用标准库，词表是逐字匹配（“生态”在“生态环境”里也会被算成 buzzword），多样性按字和字二元组算，不是按词算。所以 `synonym_rotation` 测的其实是用字多样性，查不出“优化 / 增强 / 提升”这种真正的同义词轮换，只能间接反映。要测真正的同义词轮换，需要分词和同义词表，留给以后。
 - **正则会漏，也会误报。** 尤其是 `triple_parallel` 的共同前缀判断和 `jinxing_verb` 的“后接两个汉字”。不命中的例子写在测试里，发现新的误报就补进去。
-- **切段靠换行。** 如果统一格式之后口播是一整段，“同段 ≥2”就会按全文来数。
+- **切段靠换行。** 约定要求统一格式时保留换行；如果上游把口播压成一整段，“同段 ≥2”就会按全文来数。
 - 词表和正则都是本仓库自写的。lieflat-less-ai-tone 是 CC BY-NC，这里只参考它公开的结论，没有用它的代码、词表和规则文本。活人感写作的 `check_prose.py` 是参赛者之一的工具，这里没有照搬它的规则，以免检测器偏向它。

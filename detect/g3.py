@@ -13,7 +13,7 @@ from collections import Counter
 
 from .text import COUNTABLE, Doc, countable_len, excerpt, load_rules, rule_state, severity_for
 
-# 指标名 → 规则 id。批次内多样性没有对应的规则 id，只记录。
+# 指标名 → 规则 id。批次内多样性对应 batch_diversity：distinct 越低、BLEU 越高越雷同。
 METRIC_RULE = {
     "heading_per_kchar": "heading_density",
     "connector_per_kchar": "connector_density",
@@ -26,7 +26,12 @@ METRIC_RULE = {
     "paragraph_len_cv": "uniform_length",
     "char_mattr": "synonym_rotation",
     "bigram_mattr": "synonym_rotation",
+    "batch_distinct_2": "batch_diversity",
+    "batch_distinct_3": "batch_diversity",
+    "batch_self_bleu": "batch_diversity",
+    "batch_bleu_current": "batch_diversity",
 }
+BATCH_METRICS = ("batch_distinct_2", "batch_distinct_3", "batch_self_bleu", "batch_bleu_current")
 
 HEADING_MARK = re.compile(
     r"(?:#{1,6}\s*|[一二三四五六七八九十]+[、.．]|\d{1,2}[、.．)）]\s*|第[一二三四五六七八九十\d]+[部分章节点步][：:、\s]|【[^】]{1,15}】)")
@@ -202,6 +207,8 @@ def compute(doc: Doc, ctx: dict) -> tuple[dict, dict]:
     m["char_mattr"] = mattr(units, w) if enough else None
     m["bigram_mattr"] = mattr(ngrams(units, 2), w) if enough else None
     positions["char_mattr"] = positions["bigram_mattr"] = [(0, len(doc.text))]
+    for name in BATCH_METRICS:
+        positions[name] = [(0, len(doc.text))]  # 雷同是整份稿的问题，给全文
 
     m.update(batch_metrics(doc.work, [_mask(t, ctx, doc) for t in _batch_texts(ctx)],
                            cfg["min_chars_for_batch"]))

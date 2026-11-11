@@ -93,6 +93,37 @@ CASES = {
 }
 
 
+NOT_X_VARIANTS_HIT = [
+    "保暖不仅仅是一种需求，而是一种态度。",
+    "保暖不仅是一种需求，而是一种态度。",
+    "这不只是一副耳机，更是一个随身的伙伴。",
+    "这不只是一副耳机，而是一个随身的伙伴。",
+    "它不单是一件工具，而是你的帮手。",
+    "它不单单是一件工具，更是你的帮手。",
+    "这不光是钱的事，更是面子的事。",
+    "这不仅仅只是一顿饭，而是一份心意。",
+    "保暖不仅仅是一种需求，更是一种态度。",
+]
+NOT_X_VARIANTS_MISS = [
+    "他不仅会做饭，还会修车。",
+    "不仅我去，他也去。",
+    "这不仅是我的事，也是你的事。",
+    "它不仅仅是便宜，而且质量也好。",
+    "不只是我，大家都这么想。",
+    "这不单是价格问题，还有售后。",
+]
+
+
+@pytest.mark.parametrize("text", NOT_X_VARIANTS_HIT)
+def test_not_x_but_y_variants_hit(text):
+    assert "not_x_but_y" in rules_of(run(text)), text
+
+
+@pytest.mark.parametrize("text", NOT_X_VARIANTS_MISS)
+def test_not_x_but_y_progressive_sentences_miss(text):
+    assert "not_x_but_y" not in rules_of(run(text)), text
+
+
 @pytest.mark.parametrize("rule", sorted(CASES))
 def test_rule_hits(rule):
     for text in CASES[rule][0]:
