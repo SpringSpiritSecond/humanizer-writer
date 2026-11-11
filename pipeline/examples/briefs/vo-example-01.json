@@ -1,0 +1,16 @@
+{
+  "_说明": "示例 brief：为演示 pipeline 临时编写，产品和品牌都是虚构的，不是真实作品。",
+  "id": "vo-example-01",
+  "line": "口播",
+  "is_example": true,
+  "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "platform": "抖音"},
+  "facts": [
+    {"field": "价格", "value": "89 元", "must_match": true},
+    {"field": "保温", "value": "保温 6 小时", "must_match": true}
+  ],
+  "must_include": {"brand_terms": ["示例牌暖手杯"], "cta": "点下方链接"},
+  "must_not": ["竞品名", "“最保温”"],
+  "audience": "冬天早上骑车通勤的人",
+  "speaker": "真人出镜，像跟同事聊天",
+  "target": {"duration_sec": 20, "chars_per_min": ""}
+}

@@ -1,0 +1,20 @@
+{
+  "_说明": "示例 brief：为演示 pipeline 临时编写，人物和情节都是虚构的，不是真实作品。",
+  "id": "dlg-example-01",
+  "line": "台词",
+  "is_example": true,
+  "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "is_children_content": false},
+  "scene_card": {
+    "previously": "【示例】老林拆了门口的快递，发现不是自己的。",
+    "location_time": "老小区楼道，傍晚",
+    "characters": [
+      {"name": "老林", "profile": "要面子，说话慢", "want": "不丢面子地把快递还回去"},
+      {"name": "小唐", "profile": "刚搬来，有点急", "want": "拿回自己的快递"}
+    ],
+    "scene_goal": "快递物归原主，两人认识了",
+    "conflict": "箱子已经被拆开了",
+    "beats": ["小唐上楼找快递", "老林承认拆错", "小唐没计较"]
+  },
+  "locked": {"lines": ["这箱是我的，上面写着三楼。"], "props_and_names": ["快递箱"]},
+  "target": {"duration_sec": 20, "format": "角色名：台词；（动作线）"}
+}

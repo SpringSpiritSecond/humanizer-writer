@@ -1,0 +1,33 @@
+{
+  "_说明": "示例配置。槽位 A–C 暂时填 baseline-none（不加载任何 skill），盲审胜出后再填。模型用的是测试用的假适配器，不调用任何 API；接真实模型时换掉 models 里的 adapter。S2、G3 等 detect/ 的实现合进来后，填 \"detect.stages:s2\" 这类路径。台词线 profile 里 compliance.enabled=false，G1 会直接放行。",
+  "name": "台词-baseline-none",
+  "line": "台词",
+  "profile": "profiles/台词.json",
+  "git_hash": null,
+  "candidate": {"source_type": "candidate", "candidate_id": "台词-baseline-none"},
+  "models": {
+    "generator": {"adapter": "pipeline.adapters.fake:FakeAdapter", "model": "fake", "vendor": "fake-a", "params": {}},
+    "rewriter":  {"adapter": "pipeline.adapters.fake:FakeAdapter", "model": "fake", "vendor": "fake-a", "params": {}},
+    "judge":     {"adapter": "pipeline.adapters.fake:FakeAdapter", "model": "fake", "vendor": "fake-b", "params": {}}
+  },
+  "slots": {
+    "A": {"skills": ["baseline-none"], "combine": "serial", "_待定": "盲审胜出后再填"},
+    "B": {"skills": ["baseline-none"], "combine": "serial", "_待定": "盲审胜出后再填"},
+    "C": {"skills": ["baseline-none"], "combine": "serial", "_待定": "盲审胜出后再填"},
+    "D": {"max_rounds": 2, "_待定": "盲审胜出后再填；现在的 2 轮是占位值"}
+  },
+  "stages": {
+    "S0": "pipeline.gates.brief:run",
+    "S1": {"path": "pipeline.adapters.stages:generate", "params": {"n": 3}},
+    "G0": {"path": "pipeline.gates.format:run", "params": {"default_chars_per_min": 200}},
+    "S2": null,
+    "S3": "pipeline.adapters.stages:rewrite",
+    "G1": "pipeline.gates.compliance:run",
+    "G2": "pipeline.gates.fidelity:run",
+    "G3": null,
+    "G4": null,
+    "G5": null,
+    "_S2_G3说明": "detect/ 合进来后填：S2 → detect.stages:s2，G3 → detect.stages:g3（以 detect 的 PR 为准）",
+    "_G4说明": "裁判模型定了再开：pipeline.adapters.stages:judge，models.judge 换一家厂商；校准前只记录、一律转人工"
+  }
+}
