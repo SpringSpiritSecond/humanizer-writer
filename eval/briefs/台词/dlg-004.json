@@ -1,0 +1,47 @@
+{
+  "id": "dlg-004",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "外婆上个月摔了一跤，母亲一直一个人照顾。女儿在外地工作，这次请假回来。",
+    "location_time": "外婆家客厅，工作日晚上，外婆在里屋睡着",
+    "characters": [
+      {
+        "name": "沈岚",
+        "profile": "母亲，五十多岁，憋了很久，很容易一开口就说自己有多累多委屈",
+        "want": "让女儿同意送外婆去养老院"
+      },
+      {
+        "name": "沈一诺",
+        "profile": "女儿，二十八岁，在外地做设计，心里内疚但嘴硬",
+        "want": "让外婆留在家里，自己每月出钱请保姆"
+      }
+    ],
+    "scene_goal": "母女对外婆以后怎么住做出决定",
+    "conflict": "沈岚已经去看过一家养老院、交了定金；一诺觉得外婆会被送走是自己没尽力，不肯签字",
+    "beats": [
+      "一诺看到桌上的养老院宣传单",
+      "母女压低声音争论，怕吵醒外婆",
+      "里屋传来外婆叫人的声音，沈岚起身去照顾",
+      "一诺看着母亲的背影，拿起笔"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "养老院宣传单",
+      "定金收据"
+    ]
+  },
+  "target": {
+    "duration_sec": 120,
+    "format": "角色名：台词；（动作线）"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "vo-003",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "小红书"
+  },
+  "facts": [
+    {
+      "field": "口味",
+      "value": "乌龙茶气泡水，无糖",
+      "must_match": true
+    },
+    {
+      "field": "规格",
+      "value": "330 毫升",
+      "must_match": true
+    },
+    {
+      "field": "价格",
+      "value": "6 罐 39.9 元",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "青麓气泡乌龙"
+    ],
+    "cta": "去店铺搜青麓"
+  },
+  "must_not": [
+    "森屿茶饮"
+  ],
+  "audience": "在控糖、又想喝点有味道东西的年轻人",
+  "speaker": "真人出镜，在家里冰箱前讲，像跟朋友分享",
+  "target": {
+    "duration_sec": 45,
+    "chars_per_min": ""
+  }
+}

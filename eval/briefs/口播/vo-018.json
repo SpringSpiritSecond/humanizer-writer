@@ -1,0 +1,44 @@
+{
+  "id": "vo-018",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "B 站"
+  },
+  "facts": [
+    {
+      "field": "价格",
+      "value": "免费使用",
+      "must_match": true
+    },
+    {
+      "field": "规则",
+      "value": "每本书交换收 2 元邮费补贴",
+      "must_match": true
+    },
+    {
+      "field": "城市",
+      "value": "目前开通 6 个城市",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "换页 App"
+    ],
+    "cta": "去应用商店下载换页"
+  },
+  "must_not": [
+    "书来客"
+  ],
+  "audience": "家里旧书多、想换着看的读书爱好者",
+  "speaker": "UP 主画外音，配书架画面，说话安静",
+  "target": {
+    "duration_sec": 90,
+    "chars_per_min": ""
+  }
+}

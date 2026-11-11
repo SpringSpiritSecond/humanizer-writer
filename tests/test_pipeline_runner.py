@@ -272,6 +272,19 @@ def test_s2_hits_feed_first_rewrite():
     assert cfg.stages["S3"].adapter.calls == [("rewrite", {"round": 0, "rules": ["not_x_but_y"]})]
 
 
+def test_s2_reruns_after_round0_rewrite_when_text_changed():
+    seen = []
+
+    def s2(ctx):
+        seen.append(ctx["text"])
+        return result("S2", "report", hits=[hit("not_x_but_y", "删掉", "block", span=[0, 1], excerpt=ctx["text"][:1])])
+
+    cfg = make_cfg(stages={"S2": s2, "S3": "pipeline.adapters.stages:rewrite"}, rewrite=["改过了。"])
+    d = run_brief(cfg, brief("口播"), [VO_TEXT])["drafts"][0]
+    assert stage_seq(d)[:3] == [("S2", 0), ("S3", 0), ("S2", 0)]
+    assert seen[-1] == "改过了。"                                           # 报告里最后一次 S2 看的是改写后的文本
+
+
 def test_s2_reruns_after_every_rewrite_but_s3_only_gets_gate_hits():
     seen = []
 

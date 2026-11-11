@@ -1,0 +1,52 @@
+{
+  "id": "dlg-014",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "大学宿舍四年，明天交钥匙。宿舍里的电饭锅是谁的，三人谁也说不清。",
+    "location_time": "大学宿舍，毕业前一晚，地上全是纸箱和胶带",
+    "characters": [
+      {
+        "name": "方圆",
+        "profile": "要去北京读研，爱发感慨",
+        "want": "带走电饭锅，因为是她第一年买的"
+      },
+      {
+        "name": "唐果",
+        "profile": "留在本地工作，务实，算账清楚",
+        "want": "电饭锅给自己，她下周就要用"
+      },
+      {
+        "name": "聂菲",
+        "profile": "要出国，箱子已经超重，什么都不想带",
+        "want": "大家别为一口锅吵"
+      }
+    ],
+    "scene_goal": "电饭锅归谁定下来",
+    "conflict": "方圆说锅是她买的，唐果说内胆是她后来换的，钱是她出的",
+    "beats": [
+      "打包时两人同时去拿电饭锅",
+      "各自翻出聊天记录证明",
+      "聂菲提议抽签",
+      "最后决定今晚用它煮最后一锅火锅，锅留给楼下的学妹"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "电饭锅",
+      "宿舍钥匙"
+    ]
+  },
+  "target": {
+    "duration_sec": 100,
+    "format": "角色名：台词；（动作线）"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "vo-004",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "抖音"
+  },
+  "facts": [
+    {
+      "field": "材质",
+      "value": "铝合金",
+      "must_match": true
+    },
+    {
+      "field": "尺寸",
+      "value": "展开 1.2 米，收起 8 厘米厚",
+      "must_match": true
+    },
+    {
+      "field": "承重",
+      "value": "承重 15 公斤",
+      "must_match": true
+    },
+    {
+      "field": "价格",
+      "value": "79 元",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "栖木家居",
+      "栖木折叠晾衣架"
+    ],
+    "cta": "点小黄车看看"
+  },
+  "must_not": [
+    "衣立方"
+  ],
+  "audience": "住小户型、阳台小的租房人",
+  "speaker": "真人出镜，在小阳台现场展开收起，语速快",
+  "target": {
+    "duration_sec": 45,
+    "chars_per_min": ""
+  }
+}

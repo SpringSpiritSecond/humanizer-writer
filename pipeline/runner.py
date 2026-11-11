@@ -123,7 +123,11 @@ class _Draft:
         if self.settle(self.call("G0")) == "stop":
             return
         s2 = self.call("S2")
+        before = self.text
         self.rewrite(s2["hits"] if s2 else [], "S2")
+        if s2 is not None and self.text != before:
+            # 第 0 轮改写也会让命中位置失效：按改写后的文本再跑一次 S2（只出报告）
+            self.call("S2")
         while True:
             again = False
             for gate in LOOP_GATES:

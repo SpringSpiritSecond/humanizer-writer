@@ -1,0 +1,44 @@
+{
+  "id": "vo-019",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "抖音"
+  },
+  "facts": [
+    {
+      "field": "价格",
+      "value": "挂机空调清洗 129 元一台",
+      "must_match": true
+    },
+    {
+      "field": "时长",
+      "value": "每台约 1 小时",
+      "must_match": true
+    },
+    {
+      "field": "保障",
+      "value": "清洗后 7 天内有问题免费返工",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "勤蜂上门清洗"
+    ],
+    "cta": "点下方链接预约"
+  },
+  "must_not": [
+    "洁家帮"
+  ],
+  "audience": "夏天前想洗空调的家庭",
+  "speaker": "师傅本人出镜，在客户家现场拆装，话不多",
+  "target": {
+    "duration_sec": 60,
+    "chars_per_min": ""
+  }
+}

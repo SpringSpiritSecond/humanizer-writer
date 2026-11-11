@@ -1,0 +1,44 @@
+{
+  "id": "vo-015",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "小红书"
+  },
+  "facts": [
+    {
+      "field": "价格",
+      "value": "衬衫 15 元一件",
+      "must_match": true
+    },
+    {
+      "field": "时效",
+      "value": "48 小时取件",
+      "must_match": true
+    },
+    {
+      "field": "服务",
+      "value": "3 公里内免费上门收送",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "白鹭洗衣坊"
+    ],
+    "cta": "私信预约上门取衣"
+  },
+  "must_not": [
+    "洁衣到家"
+  ],
+  "audience": "没时间送洗衣服的双职工家庭",
+  "speaker": "画外音，店主女声，讲话温和",
+  "target": {
+    "duration_sec": 60,
+    "chars_per_min": ""
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "dlg-012",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "外卖员小葛把一份麻辣烫送错了包间。",
+    "location_time": "商场餐厅的小包间，周六中午，一男一女正在相亲",
+    "characters": [
+      {
+        "name": "小葛",
+        "profile": "外卖员，赶时间，说话快，自来熟",
+        "want": "让包间里的人确认收货，赶下一单"
+      },
+      {
+        "name": "吴迪",
+        "profile": "相亲男，紧张，想表现得体面",
+        "want": "让外卖员赶紧走，别搅了气氛"
+      },
+      {
+        "name": "范晴",
+        "profile": "相亲女，觉得这次相亲很无聊",
+        "want": "借这个机会提前结束饭局"
+      }
+    ],
+    "scene_goal": "外卖的误会解开，相亲走向意外的方向",
+    "conflict": "订单上的手机尾号和吴迪的一样，小葛认定是他点的；吴迪否认，范晴故意帮小葛说话",
+    "beats": [
+      "小葛推门，叫吴迪的名字",
+      "吴迪否认，小葛念出手机尾号",
+      "范晴笑着说他就是点了",
+      "吴迪发现是自己母亲用他的号码下的单，三人对着麻辣烫沉默"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "麻辣烫",
+      "手机"
+    ]
+  },
+  "target": {
+    "duration_sec": 90,
+    "format": "角色名：台词；（动作线）"
+  }
+}

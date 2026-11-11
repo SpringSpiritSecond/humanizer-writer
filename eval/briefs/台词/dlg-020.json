@@ -1,0 +1,52 @@
+{
+  "id": "dlg-020",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": true
+  },
+  "scene_card": {
+    "previously": "恐龙小队要过河去对岸的果园，河上只有几块彩色的石头。",
+    "location_time": "动画里的小河边，早上",
+    "characters": [
+      {
+        "name": "小角",
+        "profile": "三角龙，胆子小，过河前总要问一遍",
+        "want": "安全走到对岸"
+      },
+      {
+        "name": "长长",
+        "profile": "腕龙，个子最高，看得最远",
+        "want": "带大家按颜色走对石头"
+      },
+      {
+        "name": "滴答",
+        "profile": "小机器人，会亮灯，说话一字一顿",
+        "want": "让每只恐龙都记住石头的颜色顺序"
+      }
+    ],
+    "scene_goal": "恐龙小队按颜色顺序踩石头过河",
+    "conflict": "有一块石头会晃，小角不敢踩",
+    "beats": [
+      "长长看见对岸的果园，告诉大家",
+      "滴答亮灯，按红黄蓝的顺序报石头颜色",
+      "小角在蓝色石头前停住，不敢动",
+      "大家一起喊颜色给小角打气，小角跳过去"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "彩色石头",
+      "果园"
+    ]
+  },
+  "target": {
+    "duration_sec": 90,
+    "format": "角色名：台词；（动作线）"
+  }
+}

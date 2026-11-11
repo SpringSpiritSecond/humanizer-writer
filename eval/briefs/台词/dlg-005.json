@@ -1,0 +1,45 @@
+{
+  "id": "dlg-005",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "季度绩效要定了，部门只有一个 A 的名额。",
+    "location_time": "公司小会议室，周五下午五点",
+    "characters": [
+      {
+        "name": "黄卫东",
+        "profile": "组长，四十岁，说话绕，爱用“咱们”",
+        "want": "说服下属接受 B，把 A 给自己带的新人"
+      },
+      {
+        "name": "林小满",
+        "profile": "运营专员，干了三年，数据最好，平时不争",
+        "want": "拿到 A，因为年底要靠它评职级"
+      }
+    ],
+    "scene_goal": "绩效等级定下来",
+    "conflict": "林小满的数据最好，但黄卫东已经私下答应把 A 给新人",
+    "beats": [
+      "黄卫东先夸林小满这季度辛苦",
+      "林小满听出要降级，拿出自己的数据表",
+      "黄卫东松口给她下季度的承诺，林小满要他写进邮件"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "数据表"
+    ]
+  },
+  "target": {
+    "duration_sec": 90,
+    "format": "角色名：台词；（动作线）"
+  }
+}
