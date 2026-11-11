@@ -1,0 +1,30 @@
+{
+  "line": "台词",
+  "version": "0.1",
+  "rules": {
+    "dash": "off",
+    "rhetorical_question": "hint",
+    "connector_density": "hint",
+    "buzzword": "hint",
+    "heading_density": "off",
+    "semicolon_dunhao": "hint",
+    "punchline_ending": "on",
+    "triple_parallel": "on"
+  },
+  "exceptions": [
+    { "id": "dash_interrupt", "desc": "破折号表示被打断或话没说完" },
+    { "id": "unfinished_line", "desc": "话说一半、省略、不成句" },
+    { "id": "catchphrase_repeat", "desc": "角色口头禅重复，不算同义词轮换问题" },
+    { "id": "short_fragment", "desc": "短句、单字回应" },
+    { "id": "children_screen_recap", "desc": "儿童内容里复述画面的台词保留（brief.source.is_children_content 为 true 时生效）" },
+    { "id": "action_line_adverbs", "desc": "动作线里的 缓缓 / 微微 只作提示，不强制改" },
+    { "id": "first_episode", "desc": "第一次 / 第一集 不算极限词" }
+  ],
+  "length": { "unit": "sec", "source": "brief.target.duration_sec", "chars_per_min": null, "tolerance": 0.20 },
+  "compliance": { "enabled": false, "industries": [] },
+  "fidelity": {
+    "exact": ["locked.lines", "locked.props_and_names", "scene_card.characters[].name"],
+    "beats": "scene_card.beats",
+    "no_new_plot": true
+  }
+}
