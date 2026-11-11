@@ -1,0 +1,9 @@
+id,来源,路径,许可证,星标_2026-11-11,最近推送,槽位,台词,口播,进比赛,备注,上游id
+stop-slop-zh,本仓库,skills/variants/stop-slop-zh/SKILL.md,MIT,,2026-11-11,A,是,是,是,stop-slop 中文化：删英文专属规则，补叠用“的”、被字句、汇报腔、欧化对举、小标题过密；不给替换词；通用版，没有台词和口播例外,stop-slop
+stop-slop-zh-taici,本仓库,skills/variants/stop-slop-zh-taici/SKILL.md,MIT,,2026-11-11,A,是,否,是,在 stop-slop-zh 上按台词线改造：压直说情绪和动机、主题总结、腔调雷同、句句完整、金句收尾；放行打断、口头禅、没说完的话、儿童内容复述画面,stop-slop
+stop-slop-zh-koubo,本仓库,skills/variants/stop-slop-zh-koubo/SKILL.md,MIT,,2026-11-11,A,否,是,是,在 stop-slop-zh 上按口播线改造：按朗读判断；放行设问、三段式、短句重复；防电报体；数字、品牌词、CTA 逐字保留,stop-slop
+blader-humanizer-zh,本仓库,skills/variants/blader-humanizer-zh/SKILL.md,MIT,,2026-11-11,B,是,是,是,blader v4.0.0 中文化；“可补真实细节”默认关闭、需用户明确开启；删英文专属模式，补中文模式；上游本身在 candidates.csv 里是“待定”，原版未放进 skills/upstream,blader-humanizer
+humanizer-zh-taici,本仓库,skills/variants/humanizer-zh-taici/SKILL.md,MIT,,2026-11-11,B,是,否,是,上游正文不动，增补“台词线专用规则”一节，覆盖 §2、§7、§8 等对台词不成立的检查,humanizer-zh
+humanizer-zh-koubo,本仓库,skills/variants/humanizer-zh-koubo/SKILL.md,MIT,,2026-11-11,B,否,是,是,上游正文不动，增补“口播线专用规则”一节：放行设问、三段式、重复；防电报体；数字和 CTA 逐字保留,humanizer-zh
+human-writing-batch,本仓库,skills/variants/human-writing-batch/SKILL.md,MIT,,2026-11-11,A/B,是,是,是,活人感写作非交互版：不提问、不检索、只用 brief 材料；其余规则不动；预计会写短,human-writing
+human-writing-lite-batch,本仓库,skills/variants/human-writing-lite-batch/human-writing-lite.md,MIT,,2026-11-11,A/B,是,是,是,精简版的非交互版：只改规则一；预计会写短,human-writing-lite
