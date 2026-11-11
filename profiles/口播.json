@@ -1,0 +1,32 @@
+{
+  "line": "口播",
+  "version": "0.1",
+  "rules": {
+    "rhetorical_question": "hint",
+    "triple_parallel": "hint",
+    "connector_density": "hint",
+    "buzzword": "hint",
+    "heading_density": "off",
+    "dash": "on",
+    "punchline_ending": "on"
+  },
+  "exceptions": [
+    { "id": "spoken_rhetorical_question", "desc": "设问是口播的正常手法" },
+    { "id": "spoken_triple", "desc": "有具体信息支撑的三段式卖点保留" },
+    { "id": "short_repeat", "desc": "短句重复、口语重复" },
+    { "id": "slogan_verbatim", "desc": "品牌 slogan 逐字保护，检测和改写都不碰" },
+    { "id": "keep_connectives", "desc": "不能为了去 AI 味删光关联词，避免改成电报体" }
+  ],
+  "length": { "unit": "sec", "source": "brief.target.duration_sec", "chars_per_min": null, "tolerance": 0.15 },
+  "compliance": {
+    "enabled": true,
+    "industries": [],
+    "note": "先只放《广告法》第九条的通用极限词和 2023 年执法指南第六条的豁免；医疗、药品、金融、教育等行业条款待法务补"
+  },
+  "fidelity": {
+    "exact": ["facts[].value", "must_include.brand_terms", "must_include.cta"],
+    "forbidden": "must_not",
+    "no_new_claims": true,
+    "no_new_numbers": true
+  }
+}
