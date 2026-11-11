@@ -1,0 +1,41 @@
+{
+  "_说明": "G1 合规闸门的通用词典。只收《广告法》第九条第三项（不得使用“国家级”“最高级”“最佳”等用语）的通用极限词，以及 2023 年市场监管总局《广告绝对化用语执法指南》第六条的豁免分流。条文以官方原文为准，本文件的概括和正则需要法务核对。",
+  "待补": "行业条款待法务补：医疗、药品、医疗器械、保健食品、特殊食品、化妆品功效、金融理财、教育培训、房地产、招商投资等行业的专门禁用语还没有收录。profile.compliance.industries 填了行业时，G1 会给出提示，但不会检查。",
+  "version": "0.1",
+  "terms": [
+    {"id": "national_level", "pattern": "国家级", "severity": "block", "note": "第九条第三项原文举例"},
+    {"id": "world_level", "pattern": "(?:世界|全球|宇宙)级", "severity": "block"},
+    {"id": "highest_level", "pattern": "最高级", "severity": "block", "note": "第九条第三项原文举例"},
+    {"id": "best", "pattern": "最佳", "severity": "block", "note": "第九条第三项原文举例"},
+    {"id": "most_x", "pattern": "最(?:优|强|先进|便宜|低价|高端|权威|专业|安全|有效)", "severity": "block"},
+    {"id": "top", "pattern": "顶级|顶尖|极品", "severity": "block"},
+    {"id": "first", "pattern": "第一", "severity": "block", "note": "排序意义上的第一；第一集、第一次等由 exclusions 排除"},
+    {"id": "first_choice", "pattern": "首选", "severity": "block"},
+    {"id": "only", "pattern": "唯一|独一无二|绝无仅有", "severity": "block"},
+    {"id": "unprecedented", "pattern": "史无前例|前无古人|空前绝后", "severity": "block"},
+    {"id": "almighty", "pattern": "万能", "severity": "block"},
+    {"id": "champion", "pattern": "销量冠军|全网最低|全国最低|全市最低", "severity": "block"}
+  ],
+  "fuzzy": [
+    {"id": "zui_generic", "pattern": "最(?=[㐀-鿿])", "note": "其他“最+X”：可能是主观感受（我最喜欢），也可能是比较宣称，转复核"}
+  ],
+  "exclusions": [
+    {"id": "zui_relative_time", "pattern": "最(?:近|后|终|初|早|晚)", "note": "时间、顺序上的相对概念，不算极限词"},
+    {"id": "ordinal_first", "pattern": "第一(?:集|次|回|季|期|章|节|场|幕|页|站|句|步|天|眼|口|时间|件事|反应|印象|个人|部分)", "note": "序数，不算极限词；对应 profile 例外 first_episode"},
+    {"id": "first_tier_city", "pattern": "第一(?:梯队|批次)?(?=城市)|一线城市", "note": "地域描述"}
+  ],
+  "exemptions": [
+    {"id": "self_comparison", "scope": "sentence",
+     "basis": "执法指南第六条：仅在同一品牌或同一企业的产品之间自我比较",
+     "pattern": "本店|店里|我们家|我家|自家|本品牌|旗下|同系列|全系列?|系列里|系列中|这几款|几款里|款里"},
+    {"id": "usage_tip", "scope": "overlap",
+     "basis": "执法指南第六条：用于表示商品的使用方法、使用提示",
+     "pattern": "最(?:佳|好)(?:在|于|是)?[^。！？\n]{0,10}?(?:食用|饮用|使用|喝完|吃完|冲泡|保存|赏味|观赏)(?:期|时间|方法|温度|方式)?"},
+    {"id": "standard_grade", "scope": "sentence",
+     "basis": "执法指南第六条：依据国家标准、行业标准等划分的等级",
+     "pattern": "国家标准|行业标准|国标|GB\\s?/?\\s?T?\\s?\\d+|能效|水效|等级划分"},
+    {"id": "model_or_trademark", "scope": "sentence",
+     "basis": "执法指南第六条：商品名称、规格型号、注册商标中含有的用语",
+     "pattern": "型号|商标|®|™|注册名"}
+  ]
+}
