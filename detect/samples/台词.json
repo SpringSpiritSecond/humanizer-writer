@@ -1,0 +1,18 @@
+{
+  "note": "自写示例，不来自任何真人原稿或公开作品，只用于 detect/ 的测试。ai_tone 是故意写成 AI 腔的稿子，natural 是“不该改”的自然写法。",
+  "line": "台词",
+  "ai_tone": [
+    {
+      "id": "dlg-ai-01",
+      "text": "林晚：随着时间的推移，我终于明白了一个道理。\n陈默：你明白了什么？\n林晚：爱不是占有，而是成全。我们需要对这段关系进行深入的反思。\n陈默：说白了：你就是想走。\n林晚：我被你骗了，被你的谎言困住了。\n陈默：我懂。懂你的委屈，懂你的不甘，懂你的骄傲。\n林晚：更多的理解，更多的包容，更多的陪伴。\n陈默：你为什么要走？因为你累了。你为什么不说？因为你怕我难过。\n林晚：她温柔的母亲的旧日的笑容，我母亲的那件褪色的蓝色的外套，我都记得。\n陈默：岁月静好，现世安稳，执子之手。山高水长，海阔天空，来日方长。\n林晚：总之，让我们一起珍惜当下。\n陈默：真正的爱，从来不是占有。",
+      "expect": ["cliche_opening", "not_x_but_y", "jinxing_verb", "colon_conclusion", "bei_stack", "triple_parallel", "rhetorical_question", "de_stacking", "four_char_parallel", "cliche_ending", "punchline_ending"]
+    }
+  ],
+  "natural": [
+    {
+      "id": "dlg-nat-01",
+      "text": "（夜，厨房。灯泡一闪一闪。）\n老周：吃了没？\n小雨：吃了。\n老周：吃的啥？\n小雨：面。\n老周：又是面——\n小雨：爸，我是说——算了——你别管了。\n老周：得嘞，得嘞，得嘞。\n小雨：去哪？回家。干嘛？睡觉。\n（老周缓缓坐下，微微叹了口气。）\n老周：你妈走那年，你也是这么说的。\n小雨：那不一样……\n老周：哪不一样？你说。\n小雨：第一集我就跟你说过，我不回去了。\n老周：行行行，你不回去。你不回去，我不回去，谁也别回去。\n小雨：好的爸，你别再说了，真正的家，从来不是……",
+      "covers": ["dash_interrupt", "unfinished_line", "catchphrase_repeat", "short_fragment", "action_line_adverbs", "first_episode"]
+    }
+  ]
+}
