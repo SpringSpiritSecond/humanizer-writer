@@ -7,7 +7,7 @@ from pipeline import config as cfgmod
 from pipeline.adapters.base import SkillNotFound, resolve_skill
 from pipeline.contract import ORDER, StageContractError, hit, result
 from pipeline.runner import RunnerError, run_brief
-from pipeline_helpers import DLG_PASS, VO_PASS, brief, draft, load
+from pipeline_helpers import DLG_PASS, HAS_DETECT, VO_PASS, brief, draft, example_config, load
 
 VO_TEXT = draft(VO_PASS)
 VO_BAD_FACT = draft("vo-example-01_保真不过.txt")
@@ -43,13 +43,16 @@ def stage_seq(draft_rep):
 # ---------------- 配置 ----------------
 
 @pytest.mark.parametrize("name,line", [("口播-baseline-none", "口播"), ("台词-baseline-none", "台词")])
-def test_example_configs_load(name, line):
-    cfg = cfgmod.load(f"configs/{name}.json")
+def test_example_configs_load(name, line, tmp_path):
+    raw = load(f"configs/{name}.json")
+    assert raw["stages"]["S2"] == "detect.stages:s2" and raw["stages"]["G3"] == "detect.stages:g3"
+    assert raw["stages"]["G4"] is None
+    cfg = cfgmod.load(example_config(name, tmp_path))
     assert cfg.line == line and cfg.max_rounds == 2
-    assert "S2" not in cfg.stages and "G3" not in cfg.stages      # null → 跳过
+    assert ("S2" in cfg.stages) == HAS_DETECT and ("G3" in cfg.stages) == HAS_DETECT
+    assert "G4" not in cfg.stages                                  # null → 跳过
     assert cfg.stages["S3"].adapter.slots["B"]["skills"][0].is_none
     assert cfg.warnings == []
-    raw = load(f"configs/{name}.json")
     assert "盲审胜出后再填" in raw["slots"]["A"]["_待定"]
 
 
@@ -70,8 +73,14 @@ def test_unknown_skill_is_config_error():
 
 
 def test_bad_stage_path_is_config_error():
+    with pytest.raises(cfgmod.ConfigError, match="nonexistent_mod"):
+        make_cfg(stages={"S2": "nonexistent_mod.stages:run"})
+
+
+@pytest.mark.skipif(HAS_DETECT, reason="只在没合 PR #6 时检查")
+def test_example_config_without_detect_says_so():
     with pytest.raises(cfgmod.ConfigError, match="detect.stages"):
-        make_cfg(stages={"S2": "detect.stages:s2_not_here"})
+        cfgmod.load("configs/口播-baseline-none.json")
 
 
 def test_profile_line_must_match():
@@ -261,6 +270,26 @@ def test_s2_hits_feed_first_rewrite():
     d = run_brief(cfg, brief("口播"), [VO_TEXT])["drafts"][0]
     assert d["text_final"] == "改过了。"
     assert cfg.stages["S3"].adapter.calls == [("rewrite", {"round": 0, "rules": ["not_x_but_y"]})]
+
+
+def test_s2_reruns_after_every_rewrite_but_s3_only_gets_gate_hits():
+    seen = []
+
+    def s2(ctx):
+        seen.append((ctx["round"], ctx["text"]))
+        return result("S2", "report", hits=[hit("not_x_but_y", "删掉", "block", span=[0, 1], excerpt=ctx["text"][:1])])
+
+    stages = {"S2": s2, "S3": "pipeline.adapters.stages:rewrite", "G1": "pipeline.gates.compliance:run",
+              "G2": "pipeline.gates.fidelity:run"}
+    cfg = make_cfg(stages=stages, rewrite=[VO_BAD_FACT, {"replace": [["保温 8 小时", "保温 6 小时"]]}])
+    d = run_brief(cfg, brief("口播"), [VO_BAD_FACT])["drafts"][0]
+    assert d["status"] == "passed" and d["rounds"] == 1
+    assert stage_seq(d) == [("S2", 0), ("S3", 0), ("G1", 0), ("G2", 0),
+                            ("S3", 1), ("S2", 1), ("G1", 1), ("G2", 1)]
+    assert [r for r, _ in seen] == [0, 1] and "保温 6 小时" in seen[1][1]   # 第 1 轮的 S2 看的是改写后的文本
+    calls = cfg.stages["S3"].adapter.calls
+    assert calls[0][1]["rules"] == ["not_x_but_y"]                         # 第 0 轮：S2 的命中
+    assert calls[1][1]["rules"] == ["g2.exact_missing", "g2.new_number"]   # 第 1 轮：只有打回它的 G2 的命中
 
 
 # ---------------- 模型阶段 ----------------

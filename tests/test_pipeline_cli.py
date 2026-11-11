@@ -4,14 +4,14 @@ import json
 from pipeline.__main__ import main as pipeline_main
 from workbench.__main__ import main as workbench_main
 from workbench.db import connect
-from pipeline_helpers import ROOT
+from pipeline_helpers import ROOT, example_config
 
 D = "pipeline/examples/drafts/"
 
 
 def run_cli(tmp_path, cfg, brief, drafts, name, extra=()):
     out = tmp_path / f"{name}.json"
-    args = ["run", "--config", f"configs/{cfg}.json", "--brief", f"pipeline/examples/briefs/{brief}.json",
+    args = ["run", "--config", example_config(cfg, tmp_path), "--brief", f"pipeline/examples/briefs/{brief}.json",
             "--out", str(out), *extra]
     for d in drafts:
         args += ["--text-file", str(ROOT / D / d)]
@@ -71,13 +71,13 @@ def test_run_brief_returned_exit_code(tmp_path):
     b = json.loads((ROOT / "pipeline/examples/briefs/vo-example-01.json").read_text(encoding="utf-8"))
     del b["must_include"]
     bad.write_text(json.dumps(b, ensure_ascii=False), encoding="utf-8")
-    code = pipeline_main(["run", "--config", "configs/口播-baseline-none.json", "--brief", str(bad),
+    code = pipeline_main(["run", "--config", example_config("口播-baseline-none", tmp_path), "--brief", str(bad),
                           "--text-file", str(ROOT / D / "vo-example-01_通过.txt"), "--out", str(tmp_path / "r.json")])
     assert code == 3
 
 
 def test_run_bad_config_exit_code(tmp_path):
     cfg = tmp_path / "c.json"
-    cfg.write_text(json.dumps({"line": "口播", "stages": {"S2": "detect.stages:s2"}}), encoding="utf-8")
+    cfg.write_text(json.dumps({"line": "口播", "stages": {"S2": "nonexistent_mod.stages:run"}}), encoding="utf-8")
     assert pipeline_main(["run", "--config", str(cfg), "--brief", "pipeline/examples/briefs/vo-example-01.json",
                           "--text-file", str(ROOT / D / "vo-example-01_通过.txt")]) == 2

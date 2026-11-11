@@ -2,7 +2,8 @@
 
 轮次控制
 - 第 0 轮：S3 处理 S2 的命中（没有命中就原样放行）。
-- G2 或 G3 打回 S3（verdict=route, route_to=S3）时，轮次 +1，S3 只改打回的命中，然后重跑 G1、G2（G3 再跑一遍）。
+- G2 或 G3 打回 S3（verdict=route, route_to=S3）时，轮次 +1，S3 只改打回的命中；
+  之后 S2 按改写后的文本重跑（只出报告），再重跑 G1、G2（G3 再跑一遍）。
 - 轮次达到槽位 D 的 max_rounds，或者配置里没有 S3，就不再回流，转人工。
 
 每份稿件的最终状态 status：
@@ -133,6 +134,8 @@ class _Draft:
                 if out == "reroute":
                     self.round += 1
                     self.rewrite(res["hits"], gate)
+                    # 改写后上一轮的命中位置已失效：S2 按最新文本重跑，只出报告，不送进这一轮 S3
+                    self.call("S2")
                     again = True
                     break
             if not again:
