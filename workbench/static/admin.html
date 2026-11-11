@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>盲审管理</title>
+<style>
+:root{--bg:#f6f4ef;--panel:#fffdf9;--ink:#1f1d1a;--muted:#6d675e;--line:#e3ded4;--accent:#1f5f5b;--accent-soft:#e3efed;--warn:#9a5b13;--warn-soft:#fbf0dd;--danger:#a33b2b;
+--sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 var(--sans)}
+header{padding:12px 24px;border-bottom:1px solid var(--line);background:var(--panel);display:flex;gap:12px;align-items:center}
+header h1{font-size:16px;margin:0}
+main{max-width:1180px;margin:0 auto;padding:20px 24px 80px;display:grid;gap:16px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+section h2{font-size:15px;margin:0 0 10px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:500}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:#fff}
+textarea{width:100%;min-height:90px;font-family:ui-monospace,Consolas,monospace;font-size:12px}
+.btn{border:1px solid var(--line);background:#fff;padding:6px 12px;border-radius:6px;cursor:pointer;font:inherit}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.hint{color:var(--muted);font-size:12px}
+.msg{font-size:13px;margin-top:6px}.msg.err{color:var(--danger)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+code{background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+.report{max-height:none}
+.report table{margin:8px 0 14px}
+.report h1{font-size:18px}.report h2{font-size:16px;margin-top:18px}.report h3{font-size:14px}
+.report blockquote{margin:0;padding:6px 12px;background:var(--warn-soft);color:var(--warn);border-radius:6px}
+.pill{font-size:11px;padding:1px 7px;border-radius:9px;background:var(--warn-soft);color:var(--warn)}
+@media (max-width:820px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>盲审管理</h1><span class="hint">只在本机运行 · 这里能看到揭盲信息，别在评审面前打开</span></header>
+<main id="app"></main>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let TOKEN = sessionStorage.getItem("admin_token") || "";
+async function api(path, opts = {}) {
+  const r = await fetch(path, {...opts, headers: {"Content-Type": "application/json", "X-Admin-Token": TOKEN}});
+  if (opts.raw) { if (!r.ok) throw new Error((await r.json()).error); return r; }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+function login(err = "") {
+  $("#app").innerHTML = `<section style="max-width:380px;margin:10vh auto"><h2>管理口令</h2>
+    <div class="hint">启动服务时终端里会打印。</div><div class="row"><input id="tok" style="flex:1" autofocus><button class="btn primary" id="go">进入</button></div>
+    <div class="msg err">${esc(err)}</div></section>`;
+  const go = () => { TOKEN = $("#tok").value.trim(); sessionStorage.setItem("admin_token", TOKEN); load(); };
+  $("#go").onclick = go; $("#tok").onkeydown = e => e.key === "Enter" && go();
+}
+function table(rows, cols) {
+  if (!rows.length) return `<div class="hint">（空）</div>`;
+  return `<table><tr>${cols.map(c => `<th>${esc(c[1])}</th>`).join("")}</tr>${rows.map(r => `<tr>${cols.map(c => `<td>${c[2] ? c[2](r) : esc(r[c[0]])}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+const pct = x => x == null ? "—" : Math.round(x * 100) + "%";
+
+async function load() {
+  let ov;
+  try { ov = await api("/api/admin/overview"); } catch (e) { return login(e.message); }
+  const labels = {};
+  ov.sources.forEach(s => (labels[s.line] ||= new Set()).add(s.source_label));
+  const reviewUrl = c => `${location.origin}/?code=${encodeURIComponent(c)}`;
+  $("#app").innerHTML = `
+  <section><h2>概览</h2>
+    ${table(ov.items, [["line", "线"], ["items", "条目"], ["variants", "稿件"], ["has_examples", "示例", r => r.has_examples ? `<span class="pill">含示例数据</span>` : ""]])}
+    <h2 style="margin-top:14px">来源（揭盲信息）</h2>
+    ${table(ov.sources, [["line", "线"], ["source_type", "类型"], ["source_label", "来源 / 候选 id"], ["n", "篇数"], ["hashes", "skill git hash"], ["models", "模型"]])}
+  </section>
+  <div class="grid2">
+    <section><h2>导入稿件</h2>
+      <div class="hint">JSON：<code>{"items":[brief…],"variants":[…]}</code>；CSV 列：item_id, source_type, candidate_id, skill_git_hash, model, params, sample_idx, text。</div>
+      <div class="row"><input type="file" id="file" accept=".json,.csv"></div>
+      <textarea id="paste" placeholder="或者直接粘贴 JSON / CSV"></textarea>
+      <div class="row"><select id="fmt"><option value="json">JSON</option><option value="csv">CSV</option></select><button class="btn primary" id="imp">导入</button></div>
+      <div class="msg" id="impmsg"></div>
+    </section>
+    <section><h2>评审</h2>
+      <div class="row"><input id="rname" placeholder="名字"><input id="rexp" placeholder="专长（文案 / 编辑 / 运营）"><button class="btn primary" id="radd">新建</button></div>
+      <div class="msg" id="rmsg"></div>
+      ${table(ov.raters, [["id", "id"], ["name", "名字", r => esc(r.name) + (r.is_simulated ? ` <span class="pill">模拟</span>` : "")], ["code", "评审码", r => `<code>${esc(r.code)}</code> <a href="${esc(reviewUrl(r.code))}" target="_blank">链接</a>`],
+        ["done", "进度", r => `${r.done}/${r.tasks}`], ["too_fast", "过快", r => r.too_fast || 0], ["avg_ms", "平均用时", r => r.avg_ms ? (r.avg_ms / 1000).toFixed(0) + "s" : "—"],
+        ["calibration_score", "校准分", r => r.calibration_score == null ? "—" : r.calibration_score.toFixed(2)], ["position_bias", "选左比例", r => pct(r.position_bias)], ["self_consistency", "自洽", r => pct(r.self_consistency)]])}
+    </section>
+  </div>
+  <section><h2>生成批次</h2>
+    <div class="row">
+      <label>评审 <select id="brater">${ov.raters.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select></label>
+      <label>线 <select id="bline"><option>台词</option><option>口播</option></select></label>
+      <label>两两题 <input id="bpairs" type="number" value="24" style="width:64px"></label>
+      <label>单篇判别题 <input id="bsingles" type="number" value="4" style="width:64px"></label>
+      <label>对照题比例 <input id="bratio" type="number" step="0.005" value="0.125" min="0.10" max="0.15" style="width:76px"></label>
+      <label>长度比上限 <input id="blen" type="number" step="0.1" value="1.5" style="width:64px"></label>
+      <label>种子 <input id="bseed" placeholder="随机" style="width:80px"></label>
+    </div>
+    <div class="row" id="bsrc"></div>
+    <div class="row"><button class="btn primary" id="bgo">生成</button><span class="msg" id="bmsg"></span></div>
+    <div class="hint">每批自动混入 10–15% 的对照题（真人锚点、AI 蜜罐、左右调换的重复题、金标题）。左右位置和题目顺序在服务端为每位评审单独随机，并记下种子。</div>
+    <h2 style="margin-top:14px">批次</h2>
+    ${table(ov.batches, [["id", "批次"], ["line", "线"], ["rater", "评审"], ["tasks", "题数"], ["controls", "对照题", r => `${r.controls}（${pct(r.controls / r.tasks)}）`], ["done", "已答"], ["seed", "种子"], ["created_at", "生成时间"]])}
+  </section>
+  <section><h2>导出</h2>
+    <div class="row">
+      <button class="btn" data-exp="csv">作答 CSV</button><button class="btn" data-exp="jsonl">作答 JSONL</button>
+      <button class="btn" data-exp="preference">偏好 prompt/chosen/rejected</button>
+      <label class="hint"><input type="checkbox" id="incsim"> 偏好格式包含模拟评审</label>
+    </div>
+    <div class="hint">导出都带揭盲信息（来源、skill hash、模型、参数）。偏好格式默认去掉金标题、重复题、过快作答和模拟评审。</div>
+  </section>
+  <section><h2>分析</h2>
+    <div class="row"><label>bootstrap 次数 <input id="nboot" type="number" value="500" style="width:80px"></label><button class="btn primary" id="ana">运行分析</button></div>
+    <div class="report" id="report"></div>
+  </section>`;
+
+  const drawSrc = () => {
+    const ln = $("#bline").value;
+    $("#bsrc").innerHTML = `<span class="hint">参与比较的来源：</span>` + [...(labels[ln] || [])].filter(l => l !== "gold_bad").map(l => `<label><input type="checkbox" class="src" value="${esc(l)}" checked> ${esc(l)}</label>`).join(" ");
+  };
+  $("#bline").onchange = drawSrc; drawSrc();
+
+  $("#file").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    $("#paste").value = await f.text();
+    $("#fmt").value = f.name.toLowerCase().endsWith(".csv") ? "csv" : "json";
+    $("#paste").dataset.name = f.name;
+  };
+  $("#imp").onclick = async () => {
+    try {
+      const r = await api("/api/admin/import", {method: "POST", body: JSON.stringify({format: $("#fmt").value, content: $("#paste").value, filename: $("#paste").dataset.name || "粘贴"})});
+      $("#impmsg").className = "msg"; $("#impmsg").textContent = `导入 ${r.items} 个条目、${r.variants} 篇稿件`; setTimeout(load, 900);
+    } catch (e) { $("#impmsg").className = "msg err"; $("#impmsg").textContent = e.message; }
+  };
+  $("#radd").onclick = async () => {
+    try { const r = await api("/api/admin/raters", {method: "POST", body: JSON.stringify({name: $("#rname").value, expertise: $("#rexp").value})}); load(); }
+    catch (e) { $("#rmsg").className = "msg err"; $("#rmsg").textContent = e.message; }
+  };
+  $("#bgo").onclick = async () => {
+    const all = [...document.querySelectorAll(".src")], on = all.filter(x => x.checked).map(x => x.value);
+    try {
+      const r = await api("/api/admin/batches", {method: "POST", body: JSON.stringify({rater_id: $("#brater").value, line: $("#bline").value,
+        n_pairwise: $("#bpairs").value, n_single: $("#bsingles").value, control_ratio: $("#bratio").value, max_len_ratio: $("#blen").value,
+        seed: $("#bseed").value, sources: on.length === all.length ? null : on})});
+      $("#bmsg").className = "msg"; $("#bmsg").textContent = `已生成批次 ${r.batch_id}`; setTimeout(load, 700);
+    } catch (e) { $("#bmsg").className = "msg err"; $("#bmsg").textContent = e.message; }
+  };
+  document.querySelectorAll("[data-exp]").forEach(b => b.onclick = async () => {
+    const kind = b.dataset.exp, q = kind === "preference" && $("#incsim").checked ? "?include_simulated=1" : "";
+    const r = await api(`/api/admin/export/${kind}${q}`, {raw: true});
+    const blob = await r.blob(), a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = {csv: "judgments.csv", jsonl: "judgments.jsonl", preference: "preference.jsonl"}[kind]; a.click();
+  });
+  $("#ana").onclick = async () => {
+    $("#report").innerHTML = `<div class="hint">计算中…</div>`;
+    try { const r = await api("/api/admin/analysis?n_boot=" + $("#nboot").value); $("#report").innerHTML = md(r.markdown); }
+    catch (e) { $("#report").innerHTML = `<div class="msg err">${esc(e.message)}</div>`; }
+  };
+}
+
+// 极简 Markdown：标题、表格、列表、引用、粗体
+function md(src) {
+  const lines = src.split("\n"); let html = "", i = 0;
+  const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  while (i < lines.length) {
+    const l = lines[i];
+    if (l.startsWith("|")) {
+      const rows = []; while (i < lines.length && lines[i].startsWith("|")) rows.push(lines[i++]);
+      const cells = r => r.slice(1, -1).split("|").map(c => c.trim());
+      html += `<table><tr>${cells(rows[0]).map(c => `<th>${inline(c)}</th>`).join("")}</tr>` + rows.slice(2).map(r => `<tr>${cells(r).map(c => `<td>${inline(c)}</td>`).join("")}</tr>`).join("") + `</table>`;
+      continue;
+    }
+    const h = l.match(/^(#{1,3}) (.*)/);
+    if (h) html += `<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`;
+    else if (l.startsWith("> ")) html += `<blockquote>${inline(l.slice(2))}</blockquote>`;
+    else if (l.startsWith("- ")) html += `<div>• ${inline(l.slice(2))}</div>`;
+    else if (l.trim()) html += `<p>${inline(l)}</p>`;
+    i++;
+  }
+  return html;
+}
+TOKEN ? load() : login();
+</script>
+</body>
+</html>

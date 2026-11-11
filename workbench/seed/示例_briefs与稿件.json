@@ -1,0 +1,139 @@
+{
+  "_说明": "示例数据，全部是为演示工作台流程临时编写的假稿件，不是任何真实作品，也没有调用任何模型。真人原稿到位后请用真实数据替换，不要拿这里的分析结果做结论。",
+  "is_example": true,
+  "items": [
+    {
+      "id": "dlg-demo-01",
+      "line": "台词",
+      "is_example": true,
+      "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "is_children_content": false},
+      "scene_card": {
+        "previously": "【示例】合租的两个人，冰箱里一块蛋糕不见了。",
+        "location_time": "出租屋厨房，晚上十点",
+        "characters": [
+          {"name": "小周", "profile": "嘴硬，心虚时爱说“行吧”", "want": "不认账，把事糊弄过去"},
+          {"name": "阿琳", "profile": "说话直，不绕弯", "want": "让小周承认"}
+        ],
+        "scene_goal": "小周最终认错",
+        "conflict": "蛋糕是阿琳给妈妈准备的",
+        "beats": ["阿琳发现盒子空了", "小周装傻", "阿琳说出蛋糕的用途", "小周认错"]
+      },
+      "locked": {"lines": ["那是我给我妈买的。"], "props_and_names": ["蛋糕盒"]},
+      "target": {"duration_sec": 60, "format": "角色名：台词；（动作线）"}
+    },
+    {
+      "id": "dlg-demo-02",
+      "line": "台词",
+      "is_example": true,
+      "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "is_children_content": false},
+      "scene_card": {
+        "previously": "【示例】儿子第一次去外地上学，父亲送到车站。",
+        "location_time": "火车站进站口，清晨",
+        "characters": [
+          {"name": "老陈", "profile": "不会说软话，用唠叨代替关心", "want": "让儿子路上别出事"},
+          {"name": "陈默", "profile": "十八岁，嫌父亲啰嗦", "want": "早点进站"}
+        ],
+        "scene_goal": "两人在告别时都没把话说透，但意思到了",
+        "conflict": "父亲想多说几句，儿子急着走",
+        "beats": ["父亲塞保温杯", "儿子嫌麻烦", "父亲交代最后一句", "儿子回头"]
+      },
+      "locked": {"lines": ["到了说一声。"], "props_and_names": ["保温杯"]},
+      "target": {"duration_sec": 60, "format": "角色名：台词；（动作线）"}
+    },
+    {
+      "id": "dlg-demo-03",
+      "line": "台词",
+      "is_example": true,
+      "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "is_children_content": false},
+      "scene_card": {
+        "previously": "【示例】一位常客每晚都来便利店买同一包烟。",
+        "location_time": "便利店收银台，凌晨一点",
+        "characters": [
+          {"name": "店员小吴", "profile": "夜班，话少但细心", "want": "问出常客出了什么事"},
+          {"name": "老顾客", "profile": "五十来岁，不爱提自己的事", "want": "买完就走"}
+        ],
+        "scene_goal": "店员察觉常客的变化",
+        "conflict": "常客不想解释",
+        "beats": ["店员习惯性拿烟", "常客说不要", "店员追问一句", "常客只买了牛奶"]
+      },
+      "locked": {"lines": ["今天不要了。"], "props_and_names": ["牛奶"]},
+      "target": {"duration_sec": 45, "format": "角色名：台词；（动作线）"}
+    },
+    {
+      "id": "vo-demo-01",
+      "line": "口播",
+      "is_example": true,
+      "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "platform": "抖音"},
+      "facts": [
+        {"field": "价格", "value": "199 元", "must_match": true},
+        {"field": "续航", "value": "充一次电能榨 20 杯", "must_match": true}
+      ],
+      "must_include": {"brand_terms": ["示例牌随行杯"], "cta": "点左下角小黄车"},
+      "must_not": ["竞品名", "“最”“第一”等极限词"],
+      "audience": "上班带早餐的年轻人",
+      "speaker": "真人出镜，语速快，像跟朋友聊天",
+      "target": {"duration_sec": 30, "chars_per_min": ""}
+    },
+    {
+      "id": "vo-demo-02",
+      "line": "口播",
+      "is_example": true,
+      "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "platform": "视频号"},
+      "facts": [
+        {"field": "优惠", "value": "开业一周满 30 减 5", "must_match": true},
+        {"field": "营业时间", "value": "早上 7 点开门", "must_match": true}
+      ],
+      "must_include": {"brand_terms": ["示例鲜菜铺"], "cta": "到店报暗号“老邻居”"},
+      "must_not": ["“全市最低价”"],
+      "audience": "小区里买菜的中老年人",
+      "speaker": "店主本人出镜，口音重一点没关系",
+      "target": {"duration_sec": 30, "chars_per_min": ""}
+    },
+    {
+      "id": "vo-demo-03",
+      "line": "口播",
+      "is_example": true,
+      "source": {"human_original": "（示例）无原稿文件", "rights": "示例数据，无需授权", "platform": "小红书"},
+      "facts": [
+        {"field": "价格", "value": "基础功能免费", "must_match": true},
+        {"field": "功能", "value": "说一句话就能记一笔账", "must_match": true}
+      ],
+      "must_include": {"brand_terms": ["示例记账"], "cta": "去应用商店搜“示例记账”"},
+      "must_not": ["“永久免费”"],
+      "audience": "月底总不知道钱花哪了的人",
+      "speaker": "画外音，女声，轻松",
+      "target": {"duration_sec": 30, "chars_per_min": ""}
+    }
+  ],
+  "variants": [
+    {"item_id": "dlg-demo-01", "source_type": "human", "model": "示例（未调用模型）", "text": "（阿琳拎着空蛋糕盒站在冰箱前）\n阿琳：周。\n小周：嗯？\n阿琳：这个。\n小周：盒子啊。挺好看的。\n阿琳：里面的呢？\n小周：……行吧，我以为是你随便买的。\n阿琳：那是我给我妈买的。她明天过生日。\n（小周把手机里的外卖页面翻出来）\n小周：同一家，还开着。我现在去。"},
+    {"item_id": "dlg-demo-01", "source_type": "raw_ai_baseline", "model": "示例（未调用模型）", "text": "**场景：厨房**\n\n阿琳：小周，我想我们需要好好谈一谈关于这个蛋糕盒的事情。\n小周：我其实并不太明白你在说什么，这只是一个普通的盒子而已。\n阿琳：这不仅仅是一块蛋糕，更是我对家人的一份心意。那是我给我妈买的。\n小周：我深刻地意识到了自己的错误，真的非常抱歉。\n阿琳：我希望我们以后能够更加尊重彼此的物品。"},
+    {"item_id": "dlg-demo-01", "source_type": "oneline_baseline", "model": "示例（未调用模型）", "text": "（阿琳打开冰箱，拿出空的蛋糕盒）\n阿琳：小周，冰箱里的蛋糕呢？\n小周：什么蛋糕？我没看见啊。\n阿琳：你别装了，盒子都空了。\n小周：行吧，是我吃的，我以为没人要。\n阿琳：那是我给我妈买的。\n小周：对不起，我真不知道，我明天赔你一个一模一样的。"},
+    {"item_id": "dlg-demo-01", "source_type": "candidate", "candidate_id": "示例候选-甲", "skill_git_hash": "demo000", "model": "示例（未调用模型）", "params": {"temperature": 0.7}, "text": "（阿琳把空蛋糕盒放到桌上，没说话）\n小周：……干嘛这么看我。\n阿琳：你说呢。\n小周：可能是老鼠。\n阿琳：老鼠会把叉子洗干净放回去？\n小周：行吧。行吧。我吃的。\n阿琳：那是我给我妈买的。\n（小周愣住，伸手去拿外套）\n小周：那家店几点关门？"},
+
+    {"item_id": "dlg-demo-02", "source_type": "human", "model": "示例（未调用模型）", "text": "老陈：杯子拿着。\n陈默：我有水。\n老陈：这个是热的。\n（陈默接过保温杯，塞进包侧袋，拉链拉不上）\n陈默：爸，我真得进去了。\n老陈：去吧去吧。身份证在哪个兜？\n陈默：……左边。\n老陈：嗯。到了说一声。\n（陈默走了几步，回头，老陈已经在看手机，假装没看他）"},
+    {"item_id": "dlg-demo-02", "source_type": "raw_ai_baseline", "model": "示例（未调用模型）", "text": "老陈：儿子，这个保温杯你带上，路上一定要注意保暖，照顾好自己。\n陈默：爸，我已经长大了，我会照顾好自己的，你不用担心。\n老陈：在外面要好好学习，与人为善，遇到困难不要害怕。到了说一声。\n陈默：我知道了，爸爸，谢谢你一直以来的付出和关爱。\n（两人深情相拥，眼中闪烁着泪光）"},
+    {"item_id": "dlg-demo-02", "source_type": "oneline_baseline", "model": "示例（未调用模型）", "text": "老陈：保温杯拿着，里面是热水。\n陈默：哎呀，我包都塞满了。\n老陈：塞得下，侧袋。\n陈默：行，行。我进去了啊。\n老陈：车票身份证都带了吧？\n陈默：带了，都检查三遍了。\n老陈：到了说一声。\n（陈默走到闸机口，回头看了一眼，老陈还站着）"},
+    {"item_id": "dlg-demo-02", "source_type": "candidate", "candidate_id": "示例候选-甲", "skill_git_hash": "demo000", "model": "示例（未调用模型）", "params": {"temperature": 0.7}, "text": "老陈：拿着。\n陈默：什么啊……保温杯？我不要。\n老陈：你妈装的。\n陈默：你装的吧。\n老陈：……谁装的不一样。\n（陈默把杯子塞进包里，背包鼓起一块）\n陈默：走了。\n老陈：到了说一声。\n陈默：嗯。\n（走出两步，陈默回头。老陈正用袖子擦眼镜）"},
+
+    {"item_id": "dlg-demo-03", "source_type": "human", "model": "示例（未调用模型）", "text": "（小吴已经把那包烟放在柜台上，扫码枪举着）\n老顾客：今天不要了。\n小吴：……哦。\n（小吴把烟放回去）\n小吴：那还要别的吗？\n老顾客：拿瓶牛奶。热的有吗？\n小吴：有，我给您热一下。\n老顾客：不用热。\n（小吴还是把牛奶放进了微波炉）"},
+    {"item_id": "dlg-demo-03", "source_type": "raw_ai_baseline", "model": "示例（未调用模型）", "text": "小吴：您好，欢迎光临！还是老样子吗？\n老顾客：今天不要了。\n小吴：是遇到了什么事情吗？如果您愿意，可以和我分享一下。\n老顾客：其实，生活中总有一些需要做出改变的时刻。\n小吴：我理解您的感受。那您需要来一瓶牛奶吗？\n老顾客：好的，谢谢你的关心。"},
+    {"item_id": "dlg-demo-03", "source_type": "oneline_baseline", "model": "示例（未调用模型）", "text": "小吴：还是那包吧？\n（小吴伸手去拿烟）\n老顾客：今天不要了。\n小吴：戒了？\n老顾客：嗯，试试。\n小吴：那挺好的。还要点什么？\n老顾客：来瓶牛奶。\n小吴：好嘞，一共六块五。\n（老顾客付完钱，在门口站了一会儿才走）"},
+    {"item_id": "dlg-demo-03", "source_type": "candidate", "candidate_id": "示例候选-甲", "skill_git_hash": "demo000", "model": "示例（未调用模型）", "params": {"temperature": 0.7}, "text": "（烟已经在柜台上了）\n老顾客：今天不要了。\n小吴：（手停了一下）好。\n老顾客：……牛奶在哪？\n小吴：最里面，第二排。\n（老顾客拿了一瓶回来，放在烟原来的位置）\n小吴：医生说的？\n老顾客：我闺女说的。\n小吴：六块五。"},
+
+    {"item_id": "vo-demo-01", "source_type": "human", "model": "示例（未调用模型）", "text": "早上来不及吃早饭的举手。我之前也是，到公司随便啃个面包。后来买了这个示例牌随行杯，前一晚把水果切好扔冰箱，早上倒进去，地铁上按一下，到站正好喝。充一次电能榨 20 杯，我一个月就充了一次。199 元，点左下角小黄车。"},
+    {"item_id": "vo-demo-01", "source_type": "raw_ai_baseline", "model": "示例（未调用模型）", "text": "在快节奏的现代生活中，健康早餐变得越来越重要。示例牌随行杯，不仅是一款榨汁杯，更是你健康生活的贴心伙伴！它小巧便携，充一次电能榨 20 杯，让你随时随地享受新鲜果汁。仅需 199 元，开启你的元气每一天。点左下角小黄车，立即拥有吧！"},
+    {"item_id": "vo-demo-01", "source_type": "oneline_baseline", "model": "示例（未调用模型）", "text": "你们早上都吃什么？我反正老是来不及。最近用上了示例牌随行杯，晚上把水果切好，早上丢进去按一下就行，走路的工夫就榨好了。充一次电能榨 20 杯，挺耐用的。价格 199 元，想要的点左下角小黄车看看。"},
+    {"item_id": "vo-demo-01", "source_type": "candidate", "candidate_id": "示例候选-甲", "skill_git_hash": "demo000", "model": "示例（未调用模型）", "params": {"temperature": 0.7}, "text": "我早饭基本在地铁上解决，以前是面包，现在是这个，示例牌随行杯。苹果香蕉前一晚切好，早上倒进去，按一下，过三站就能喝。充一次电能榨 20 杯，我上回充电还是上个月。199 元，点左下角小黄车。"},
+
+    {"item_id": "vo-demo-02", "source_type": "human", "model": "示例（未调用模型）", "text": "老邻居们，我是示例鲜菜铺的老板，就在三号门出去右手边。我们早上 7 点开门，菜是凌晨四点我自己去批发市场拉的。开业一周满 30 减 5，到店报暗号“老邻居”就行。不用扫码不用下载啥，报暗号就减。"},
+    {"item_id": "vo-demo-02", "source_type": "raw_ai_baseline", "model": "示例（未调用模型）", "text": "亲爱的邻居们，大家好！示例鲜菜铺盛大开业啦！我们始终坚持新鲜、健康、实惠的经营理念，为您的餐桌保驾护航。每天早上 7 点准时开门，开业一周满 30 减 5，到店报暗号“老邻居”即可享受。期待您的光临，让我们一起开启美好生活！"},
+    {"item_id": "vo-demo-02", "source_type": "oneline_baseline", "model": "示例（未调用模型）", "text": "各位邻居好，示例鲜菜铺开业了，就在小区门口。每天早上 7 点开门，菜都是当天进的，新鲜。开业这一周满 30 减 5，结账的时候报暗号“老邻居”就能减。大家有空过来逛逛，买不买都欢迎。"},
+    {"item_id": "vo-demo-02", "source_type": "candidate", "candidate_id": "示例候选-甲", "skill_git_hash": "demo000", "model": "示例（未调用模型）", "params": {"temperature": 0.7}, "text": "我是示例鲜菜铺的，三号门出去就是。早上 7 点开门，您遛完弯正好过来。菜是我凌晨去拉的，叶子菜到中午还挺精神。开业一周满 30 减 5，到店报暗号“老邻居”。手机不用掏，嘴说就行。"},
+
+    {"item_id": "vo-demo-03", "source_type": "human", "model": "示例（未调用模型）", "text": "每个月 25 号我都要看着余额发呆：钱呢？试过记账，坚持不过三天，因为太麻烦。示例记账是说一句话就能记一笔账，“午饭 28”，说完就完事。基础功能免费，我用了俩月，第一次知道我奶茶一个月喝了四百多。去应用商店搜“示例记账”。"},
+    {"item_id": "vo-demo-03", "source_type": "raw_ai_baseline", "model": "示例（未调用模型）", "text": "你是否也曾为月底的账单而烦恼？示例记账，是一款专为年轻人打造的智能记账工具。它不仅界面简洁，更能让你说一句话就能记一笔账，轻松掌控每一笔开支。基础功能免费，助力你实现财务自由。赶快去应用商店搜“示例记账”，开启理财新篇章吧！"},
+    {"item_id": "vo-demo-03", "source_type": "oneline_baseline", "model": "示例（未调用模型）", "text": "月底总不知道钱花哪去了？我以前也这样。后来用了示例记账，说一句话就能记一笔账，比如“打车 23”，它自己就记好了。基础功能免费，够用了。用了一阵发现外卖花得最多。想试试的去应用商店搜“示例记账”。"},
+    {"item_id": "vo-demo-03", "source_type": "candidate", "candidate_id": "示例候选-甲", "skill_git_hash": "demo000", "model": "示例（未调用模型）", "params": {"temperature": 0.7}, "text": "我记账从来没撑过一周。示例记账我用到第二个月了，原因很简单：不用打字。说一句话就能记一笔账，“地铁 4 块”，完了。基础功能免费。上个月账单出来，奶茶比房租的零头还多，我自己都笑了。去应用商店搜“示例记账”。"}
+  ]
+}

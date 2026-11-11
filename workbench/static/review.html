@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>盲审工作台</title>
+<style>
+:root{
+  --bg:#f6f4ef; --panel:#fffdf9; --ink:#1f1d1a; --muted:#6d675e; --line:#e3ded4;
+  --accent:#1f5f5b; --accent-soft:#e3efed; --warn:#9a5b13; --warn-soft:#fbf0dd;
+  --mark:#fde9a8; --danger:#a33b2b;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans)}
+button{font:inherit;cursor:pointer}
+header{display:flex;align-items:center;gap:16px;padding:10px 24px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+header h1{font-size:16px;margin:0;font-weight:600;letter-spacing:.02em}
+header .who{color:var(--muted)}
+.progress{flex:1;display:flex;align-items:center;gap:10px;max-width:420px;margin-left:auto}
+.bar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
+.badge{font-size:12px;padding:2px 8px;border-radius:10px;background:var(--warn-soft);color:var(--warn);border:1px solid #efd9b4}
+main{max-width:1180px;margin:0 auto;padding:20px 24px 80px}
+.login{max-width:360px;margin:12vh auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:28px}
+.login input{width:100%;padding:10px 12px;font-size:16px;border:1px solid var(--line);border-radius:6px;margin:12px 0}
+.btn{border:1px solid var(--line);background:var(--panel);padding:7px 14px;border-radius:6px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.ctx{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:16px}
+.ctx h2{font-size:13px;margin:0 0 8px;color:var(--muted);font-weight:600;letter-spacing:.05em}
+.ctx dl{display:grid;grid-template-columns:5.5em 1fr;gap:4px 12px;margin:0;font-size:14px}
+.ctx dt{color:var(--muted)} .ctx dd{margin:0}
+.ctx .say{margin-top:10px;padding:8px 12px;background:var(--accent-soft);border-radius:6px;color:var(--accent);font-size:14px}
+.q{font-size:18px;font-weight:600;margin:6px 0 12px;display:flex;align-items:baseline;gap:10px}
+.q .step{font-size:12px;font-weight:500;color:#fff;background:var(--accent);border-radius:10px;padding:1px 9px}
+.q .step.off{background:var(--line);color:var(--muted)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cols.single{grid-template-columns:minmax(0,640px)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s, box-shadow .15s}
+.card.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.card .lab{font-weight:700;font-size:14px;color:var(--accent);display:flex;justify-content:space-between}
+.card .lab span{font-weight:400;color:var(--muted);font-size:12px}
+.txt{white-space:pre-wrap;font-size:16px;line-height:1.95;min-height:8em;user-select:text}
+.txt mark{background:var(--mark);border-radius:2px;cursor:pointer;padding:0 1px}
+.txt mark[data-tag]:after{content:attr(data-tag);font-size:10px;color:var(--warn);vertical-align:super;margin-left:2px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.scale button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 2px;font-size:12px;line-height:1.3;color:var(--ink)}
+.scale button b{display:block;font-size:15px}
+.scale button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 10px;font-size:13px;color:var(--muted)}
+.chip kbd{font-size:10px;margin-right:4px;color:var(--muted)}
+.chip.on{background:var(--warn-soft);border-color:#e7c58f;color:var(--warn)}
+.pref{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+.pref .opts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.pref .opts button{padding:10px;border:1px solid var(--line);background:#fff;border-radius:8px}
+.pref .opts button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pref.locked{opacity:.5}
+textarea{width:100%;min-height:52px;border:1px solid var(--line);border-radius:6px;padding:8px 10px;font:inherit;resize:vertical;background:#fff}
+.foot{display:flex;align-items:center;gap:10px;margin-top:14px}
+.foot .grow{flex:1}
+.hint{color:var(--muted);font-size:12px}
+kbd{font-family:ui-monospace,Consolas,monospace;font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;background:#fff;color:var(--ink)}
+.keys{margin-top:22px;color:var(--muted);font-size:12px;line-height:2}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:.92}
+.done{text-align:center;margin-top:14vh;color:var(--muted)}
+.err{color:var(--danger);font-size:13px;min-height:1.2em}
+@media (max-width:820px){.cols{grid-template-columns:1fr}.pref .opts{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>盲审工作台</h1><span class="who" id="who"></span><span id="exbadge"></span>
+  <div class="progress" id="prog" hidden><span id="progtxt" class="hint"></span><div class="bar"><i id="barfill"></i></div></div>
+</header>
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let CODE = new URLSearchParams(location.search).get("code") || sessionStorage.getItem("rater_code") || "";
+let META = null, QUEUE = [], idx = 0, T = null, S = null, active = "A", t0 = 0, elapsed = 0;
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, {...opts, headers: {"Content-Type": "application/json", "X-Rater-Code": CODE}});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); }
+
+// 用时：页面隐藏时暂停
+function startClock() { elapsed = 0; t0 = document.hidden ? 0 : performance.now(); }
+function clockMs() { return Math.round(elapsed + (t0 ? performance.now() - t0 : 0)); }
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { if (t0) { elapsed += performance.now() - t0; t0 = 0; } }
+  else if (T) t0 = performance.now();
+});
+
+function showLogin(err = "") {
+  $("#app").innerHTML = `<div class="login"><h2 style="margin:0 0 4px;font-size:18px">输入评审码</h2>
+    <div class="hint">评审码由项目负责人发给你。题目来源全部隐藏，评完也不会揭晓。</div>
+    <input id="code" autocomplete="off" value="${esc(CODE)}" autofocus>
+    <div class="err">${esc(err)}</div>
+    <button class="btn primary" id="go" style="width:100%">开始</button></div>`;
+  const go = () => { CODE = $("#code").value.trim(); sessionStorage.setItem("rater_code", CODE); boot(); };
+  $("#go").onclick = go; $("#code").onkeydown = e => { if (e.key === "Enter") go(); };
+}
+
+async function boot() {
+  try {
+    META = await api("/api/meta");
+    const me = await api("/api/rater/me");
+    $("#who").textContent = me.name;
+    const q = await api("/api/rater/queue");
+    QUEUE = q.batches.flatMap(b => b.tasks);
+    $("#prog").hidden = false;
+    idx = QUEUE.findIndex(t => !t.done); if (idx < 0) idx = QUEUE.length;
+    render();
+  } catch (e) { showLogin(e.message); }
+}
+
+function updateProgress() {
+  const done = QUEUE.filter(t => t.done).length;
+  $("#progtxt").textContent = `已答 ${done} / ${QUEUE.length}`;
+  $("#barfill").style.width = QUEUE.length ? (100 * done / QUEUE.length) + "%" : "0";
+}
+
+async function render() {
+  updateProgress();
+  if (idx >= QUEUE.length) {
+    T = null;
+    $("#app").innerHTML = `<div class="done"><h2>${QUEUE.length ? "这一批答完了，谢谢！" : "现在没有分给你的题。"}</h2>
+      <p>${QUEUE.length ? `可以按 <kbd>←</kbd> 回看修改。` : ""}</p></div>`;
+    return;
+  }
+  T = await api("/api/rater/task/" + QUEUE[idx].id);
+  const j = T.judgment;
+  S = {conf: {A: j?.ai_conf_a ?? null, B: j?.ai_conf_b ?? null}, pref: j?.preference ?? null,
+       tags: {A: new Set(j?.tags?.A || []), B: new Set(j?.tags?.B || [])}, spans: j?.spans || [], reason: j?.reason || ""};
+  active = "A";
+  $("#exbadge").innerHTML = T.is_example ? `<span class="badge">示例数据 · 非真实作品</span>` : "";
+  draw();
+  startClock();
+}
+
+function ctxHtml() {
+  const c = T.context;
+  if (T.line === "台词") {
+    const sc = c.scene_card || {};
+    const chars = (sc.characters || []).map(x => `<b>${esc(x.name)}</b>：${esc(x.profile)}；想要${esc(x.want)}`).join("<br>");
+    return `<div class="ctx"><h2>场景卡（所有版本相同）</h2><dl>
+      <dt>前情</dt><dd>${esc(sc.previously)}</dd><dt>地点时间</dt><dd>${esc(sc.location_time)}</dd>
+      <dt>人物</dt><dd>${chars}</dd><dt>这场戏</dt><dd>${esc(sc.scene_goal)}；冲突：${esc(sc.conflict)}</dd>
+      <dt>beat</dt><dd>${(sc.beats || []).map(esc).join(" → ")}</dd>
+      ${c.locked?.lines?.length ? `<dt>锁定台词</dt><dd>${c.locked.lines.map(esc).join(" / ")}</dd>` : ""}
+      </dl></div>`;
+  }
+  const facts = (c.facts || []).map(f => `${esc(f.field)}：${esc(f.value)}`).join("；");
+  return `<div class="ctx"><h2>口播 brief（所有版本相同）</h2><dl>
+    <dt>事实</dt><dd>${facts}</dd>
+    <dt>必须出现</dt><dd>${esc((c.must_include?.brand_terms || []).join("、"))}；CTA：${esc(c.must_include?.cta)}</dd>
+    <dt>受众</dt><dd>${esc(c.audience)}</dd><dt>讲话人</dt><dd>${esc(c.speaker)}</dd></dl>
+    <div class="say">请把每段小声读出来再判断。</div></div>`;
+}
+
+function textHtml(side, text) {
+  const sp = S.spans.filter(s => s.side === side).sort((a, b) => a.start - b.start);
+  let out = "", pos = 0;
+  sp.forEach((s, k) => {
+    if (s.start < pos) return;
+    out += esc(text.slice(pos, s.start));
+    out += `<mark data-i="${S.spans.indexOf(s)}" ${s.tag ? `data-tag="${esc(s.tag)}"` : ""} title="点击取消划选">${esc(text.slice(s.start, s.end))}</mark>`;
+    pos = s.end;
+  });
+  return out + esc(text.slice(pos));
+}
+
+function draw() {
+  const pair = T.kind === "pairwise_pref";
+  const stage1Done = S.conf.A && (!pair || S.conf.B);
+  const cards = T.texts.map(t => `
+    <section class="card ${active === t.side ? "active" : ""}" data-side="${t.side}">
+      <div class="lab">${pair ? t.side : "这段"} <span>${active === t.side ? "当前操作这一段" : `按 Tab 切到这一段`}</span></div>
+      <div class="txt" data-side="${t.side}">${textHtml(t.side, t.text)}</div>
+      <div><div class="hint" style="margin-bottom:4px">${esc(T.prompts.turing)}</div>
+      <div class="scale">${META.conf_labels.map((l, k) => `<button data-conf="${k + 1}" data-side="${t.side}" class="${S.conf[t.side] === k + 1 ? "on" : ""}"><b>${k + 1}</b>${esc(l.slice(2))}</button>`).join("")}</div></div>
+      <div class="chips">${META.tags.map(g => `<button class="chip ${S.tags[t.side].has(g.id) ? "on" : ""}" data-tag="${esc(g.id)}" data-side="${t.side}" title="${esc(g.hint)}"><kbd>${g.key.toUpperCase()}</kbd>${esc(g.id)}</button>`).join("")}</div>
+    </section>`).join("");
+  const prefs = [["A", "A 更好", "A"], ["tie", "一样好", "S"], ["both_bad", "都不行", "X"], ["B", "B 更好", "B"]];
+  $("#app").innerHTML = `
+    ${ctxHtml()}
+    <div class="q"><span class="step ${stage1Done ? "off" : ""}">① 判别</span>${esc(T.prompts.turing)}
+      <span class="hint">${pair ? "两段都要打分" : ""}</span></div>
+    <div class="cols ${pair ? "" : "single"}">${cards}</div>
+    ${pair ? `<div class="pref ${stage1Done ? "" : "locked"}">
+      <div class="q" style="margin:0"><span class="step ${stage1Done ? "" : "off"}">② 偏好</span>${esc(T.prompts.pref)}</div>
+      ${stage1Done ? "" : `<div class="hint">先给两段都打完判别分，才能选偏好。</div>`}
+      <div class="opts">${prefs.map(([v, l, k]) => `<button data-pref="${v}" ${stage1Done ? "" : "disabled"} class="${S.pref === v ? "on" : ""}"><kbd>${k}</kbd> ${l}</button>`).join("")}</div></div>` : ""}
+    <div style="margin-top:14px"><textarea id="reason" placeholder="理由（可选，按 / 进入，Esc 退出）">${esc(S.reason)}</textarea></div>
+    <div class="foot">
+      <button class="btn" id="prev" ${idx === 0 ? "disabled" : ""}>← 上一题</button>
+      <span class="grow hint">第 ${idx + 1} 题 · 划选文字后按 <kbd>H</kbd> 标记片段，或按标签键直接带标签标记</span>
+      <button class="btn primary" id="submit" ${canSubmit() ? "" : "disabled"}>提交 ⏎</button>
+    </div>
+    <div class="keys">
+      <kbd>1</kbd>–<kbd>5</kbd> 给当前段打判别分 · <kbd>Tab</kbd> 切换 A/B ·
+      ${META.tags.map(g => `<kbd>${g.key.toUpperCase()}</kbd>`).join("")} 标签 ·
+      ${pair ? `<kbd>A</kbd> <kbd>B</kbd> <kbd>S</kbd> 一样好 <kbd>X</kbd> 都不行 · ` : ""}
+      <kbd>Enter</kbd> 提交 · <kbd>←</kbd> <kbd>→</kbd> 翻题
+    </div>`;
+  bind();
+}
+
+function canSubmit() { return S.conf.A && (T.kind !== "pairwise_pref" || (S.conf.B && S.pref)); }
+
+function setConf(side, v) {
+  S.conf[side] = v;
+  if (T.kind === "pairwise_pref" && side === "A" && !S.conf.B) active = "B";
+  draw();
+}
+function toggleTag(side, tag) { S.tags[side].has(tag) ? S.tags[side].delete(tag) : S.tags[side].add(tag); draw(); }
+function setPref(v) {
+  if (T.kind !== "pairwise_pref") return;
+  if (!(S.conf.A && S.conf.B)) { toast("先给两段都打判别分"); return; }
+  S.pref = v; draw();
+}
+
+function selectionSpan() {
+  const sel = getSelection();
+  if (!sel.rangeCount || sel.isCollapsed) return null;
+  const r = sel.getRangeAt(0);
+  const box = r.commonAncestorContainer.nodeType === 1 ? r.commonAncestorContainer.closest(".txt") : r.commonAncestorContainer.parentElement.closest(".txt");
+  if (!box) return null;
+  const pre = document.createRange(); pre.selectNodeContents(box); pre.setEnd(r.startContainer, r.startOffset);
+  const start = pre.toString().length, text = r.toString();
+  if (!text.trim()) return null;
+  return {side: box.dataset.side, start, end: start + text.length, text};
+}
+function addSpan(tag) {
+  const s = selectionSpan();
+  if (!s) return false;
+  s.tag = tag || null;
+  S.spans.push(s);
+  if (tag) S.tags[s.side].add(tag);
+  getSelection().removeAllRanges();
+  active = s.side; draw();
+  return true;
+}
+
+function bind() {
+  document.querySelectorAll("[data-conf]").forEach(b => b.onclick = () => { active = b.dataset.side; setConf(b.dataset.side, +b.dataset.conf); });
+  document.querySelectorAll(".chip").forEach(b => b.onclick = () => { if (!addSpan(b.dataset.tag)) toggleTag(b.dataset.side, b.dataset.tag); });
+  document.querySelectorAll("[data-pref]").forEach(b => b.onclick = () => setPref(b.dataset.pref));
+  document.querySelectorAll(".card").forEach(c => c.addEventListener("mousedown", () => { if (active !== c.dataset.side) { active = c.dataset.side; document.querySelectorAll(".card").forEach(x => x.classList.toggle("active", x === c)); } }));
+  document.querySelectorAll("mark[data-i]").forEach(m => m.onclick = () => { S.spans.splice(+m.dataset.i, 1); draw(); });
+  $("#reason").oninput = e => S.reason = e.target.value;
+  $("#prev").onclick = () => go(-1);
+  $("#submit").onclick = submit;
+}
+
+async function submit() {
+  if (!canSubmit()) { toast(T.kind === "pairwise_pref" ? "两段判别分和偏好都要选" : "先打判别分"); return; }
+  const body = {ai_conf_a: S.conf.A, ai_conf_b: S.conf.B, preference: S.pref, reason: S.reason, spans: S.spans,
+                tags: {A: [...S.tags.A], B: [...S.tags.B]}, duration_ms: clockMs()};
+  try {
+    const r = await api(`/api/rater/task/${T.id}/judgment`, {method: "POST", body: JSON.stringify(body)});
+    QUEUE[idx].done = true;
+    if (r.too_fast) toast("这题答得比较快，系统记下了。不着急，读完再判断。");
+    idx++; render();
+  } catch (e) { toast(e.message); }
+}
+function go(d) {
+  const n = idx + d;
+  if (n < 0 || n > QUEUE.length) return;
+  if (d > 0 && !QUEUE[idx]?.done) { toast("这题还没提交"); return; }
+  idx = n; render();
+}
+
+document.addEventListener("keydown", e => {
+  if (!T) { if (e.key === "ArrowLeft" && QUEUE.length) go(-1); return; }
+  const inText = e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT";
+  if (inText) { if (e.key === "Escape") e.target.blur(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  // 用物理键位（e.code）判断，中文输入法开着、或全角标点模式下快捷键也照常工作
+  const c = e.code || "";
+  const k = /^Key[A-Z]$/.test(c) ? c.slice(3).toLowerCase()
+          : /^(Digit|Numpad)[0-9]$/.test(c) ? c.slice(-1)
+          : c === "Slash" || c === "NumpadDivide" ? "/"
+          : c === "Enter" || c === "NumpadEnter" ? "enter"
+          : (e.key || "").toLowerCase();
+  const pair = T.kind === "pairwise_pref";
+  if (/^[1-5]$/.test(k)) { setConf(active, +k); e.preventDefault(); return; }
+  if (k === "tab") { if (pair) { active = active === "A" ? "B" : "A"; draw(); } e.preventDefault(); return; }
+  const tag = META.tags.find(g => g.key === k);
+  if (tag) { if (!addSpan(tag.id)) toggleTag(active, tag.id); e.preventDefault(); return; }
+  if (k === "h") { if (!addSpan(null)) toast("先用鼠标划选一段文字"); return; }
+  if (pair && k === "a") return setPref("A");
+  if (pair && k === "b") return setPref("B");
+  if (pair && k === "s") return setPref("tie");
+  if (pair && k === "x") return setPref("both_bad");
+  if (k === "enter") { e.preventDefault(); submit(); return; }
+  if (k === "/") { e.preventDefault(); $("#reason").focus(); return; }
+  if (k === "arrowleft") go(-1);
+  if (k === "arrowright") go(1);
+});
+
+CODE ? boot() : showLogin();
+</script>
+</body>
+</html>
