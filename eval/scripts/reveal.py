@@ -22,6 +22,10 @@ def load_raters(run: Path) -> list[tuple[str, dict]]:
         out = []
         for f in sorted(d.glob("*.json")):
             rec = json.loads(f.read_text(encoding="utf-8"))
+            # 从在线审稿页导出的文档可能多包一层（{"data": {"name", "data"}}）
+            inner = rec.get("data")
+            if isinstance(inner, dict) and isinstance(inner.get("data"), dict) and "name" in inner:
+                rec = inner
             out.append((rec.get("name") or f.stem[:6], rec.get("data") or {}))
         return out
     f = run / "ratings.json"
