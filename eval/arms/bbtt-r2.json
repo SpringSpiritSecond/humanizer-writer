@@ -1,0 +1,27 @@
+{
+  "_说明": "第二轮：只写稿不改稿，每个组合一个模型。比较三件事：brief 写法（v1 带风格指令，v2 只写场景）、通用 skill speak-to-someone、模型。审稿页展示的是 v2 brief。",
+  "models": {
+    "kimi":   {"model": "kimi-k3",        "vendor": "moonshot", "api_key_env": "RELAYROUTER_KIMI_API_KEY"},
+    "gemini": {"model": "gemini-4-argon", "vendor": "google",   "api_key_env": "RELAYROUTER_API_KEY"}
+  },
+  "defaults": {"base_url_env": "RELAYROUTER_BASE_URL", "temperature": 1.0, "max_tokens": 6000,
+               "reasoning_effort": "low", "timeout": 300},
+  "arms": {
+    "台词": [
+      {"id": "kimi·无 skill·旧 brief",       "model": "kimi",   "skills": [], "briefs": "eval/briefs/bbtt-v1"},
+      {"id": "kimi·无 skill",                "model": "kimi",   "skills": []},
+      {"id": "gemini·无 skill",              "model": "gemini", "skills": []},
+      {"id": "kimi·speak-to-someone",        "model": "kimi",   "skills": ["speak-to-someone"]},
+      {"id": "gemini·speak-to-someone",      "model": "gemini", "skills": ["speak-to-someone"]},
+      {"id": "kimi·drama → speak-to-someone", "model": "kimi",  "skills": ["drama-skills-dialogue", "speak-to-someone"]}
+    ],
+    "科普": [
+      {"id": "kimi·无 skill·旧 brief",       "model": "kimi",   "skills": [], "briefs": "eval/briefs/bbtt-v1"},
+      {"id": "kimi·无 skill",                "model": "kimi",   "skills": []},
+      {"id": "gemini·无 skill",              "model": "gemini", "skills": []},
+      {"id": "kimi·speak-to-someone",        "model": "kimi",   "skills": ["speak-to-someone"]},
+      {"id": "gemini·speak-to-someone",      "model": "gemini", "skills": ["speak-to-someone"]},
+      {"id": "kimi·活人感 → speak-to-someone", "model": "kimi",  "skills": ["human-writing-batch", "speak-to-someone"]}
+    ]
+  }
+}

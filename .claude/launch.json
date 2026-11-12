@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "workbench", "serve", "--port", "8765", "--admin-token", "demo-admin"],
       "port": 8765
+    },
+    {
+      "name": "review-bbtt-full",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["eval/scripts/review_server.py", "--run", "eval/out/bbtt-full", "--port", "8771"],
+      "port": 8771
     }
   ]
 }

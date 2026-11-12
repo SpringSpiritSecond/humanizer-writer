@@ -1,0 +1,344 @@
+{
+ "_说明": "一次审完：只写稿不改稿，每个组合一个模型。Kimi K3 和 Gemini 4 Argon 各配 6 种 skill 组合（含两种顺序），GLM-5.2 配 3 种。三条线都用 v2 brief（只写场景，不写风格指令）。",
+ "models": {
+  "kimi": {
+   "model": "kimi-k3",
+   "vendor": "moonshot",
+   "api_key_env": "RELAYROUTER_KIMI_API_KEY"
+  },
+  "gemini": {
+   "model": "gemini-4-argon",
+   "vendor": "google",
+   "api_key_env": "RELAYROUTER_API_KEY"
+  },
+  "glm": {
+   "model": "glm-5.2",
+   "vendor": "zhipu",
+   "api_key_env": "RELAYROUTER_GLM_API_KEY"
+  }
+ },
+ "defaults": {
+  "base_url_env": "RELAYROUTER_BASE_URL",
+  "temperature": 1.0,
+  "max_tokens": 6000,
+  "reasoning_effort": "low",
+  "timeout": 300
+ },
+ "arms": {
+  "台词": [
+   {
+    "id": "kimi·无 skill",
+    "model": "kimi",
+    "skills": []
+   },
+   {
+    "id": "kimi·speak-to-someone",
+    "model": "kimi",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "kimi·活人感",
+    "model": "kimi",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "kimi·stop-slop",
+    "model": "kimi",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "kimi·活人感 → speak-to-someone",
+    "model": "kimi",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "kimi·speak-to-someone → 活人感",
+    "model": "kimi",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "gemini·speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·活人感",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·stop-slop",
+    "model": "gemini",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·活人感 → speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "glm·无 skill",
+    "model": "glm",
+    "skills": []
+   },
+   {
+    "id": "glm·speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·活人感",
+    "model": "glm",
+    "skills": [
+     "human-writing-batch"
+    ]
+   }
+  ],
+  "科普": [
+   {
+    "id": "kimi·无 skill",
+    "model": "kimi",
+    "skills": []
+   },
+   {
+    "id": "kimi·speak-to-someone",
+    "model": "kimi",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "kimi·活人感",
+    "model": "kimi",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "kimi·stop-slop",
+    "model": "kimi",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "kimi·活人感 → speak-to-someone",
+    "model": "kimi",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "kimi·speak-to-someone → 活人感",
+    "model": "kimi",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "gemini·speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·活人感",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·stop-slop",
+    "model": "gemini",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·活人感 → speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "glm·无 skill",
+    "model": "glm",
+    "skills": []
+   },
+   {
+    "id": "glm·speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·活人感",
+    "model": "glm",
+    "skills": [
+     "human-writing-batch"
+    ]
+   }
+  ],
+  "训练": [
+   {
+    "id": "kimi·无 skill",
+    "model": "kimi",
+    "skills": []
+   },
+   {
+    "id": "kimi·speak-to-someone",
+    "model": "kimi",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "kimi·活人感",
+    "model": "kimi",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "kimi·stop-slop",
+    "model": "kimi",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "kimi·活人感 → speak-to-someone",
+    "model": "kimi",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "kimi·speak-to-someone → 活人感",
+    "model": "kimi",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "gemini·speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·活人感",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·stop-slop",
+    "model": "gemini",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·活人感 → speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "glm·无 skill",
+    "model": "glm",
+    "skills": []
+   },
+   {
+    "id": "glm·speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·活人感",
+    "model": "glm",
+    "skills": [
+     "human-writing-batch"
+    ]
+   }
+  ]
+ }
+}

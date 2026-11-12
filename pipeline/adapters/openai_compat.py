@@ -35,7 +35,13 @@ from .base import ModelAdapter
 LINE_FORMAT = {
     "台词": "只输出这场戏的剧本正文，不要标题、说明或任何解释。格式：每句台词一行，写成“角色名：台词”；动作线单独一行，用全角括号括起来。",
     "口播": "只输出口播稿正文，就是要念出来的话，不要标题、分镜、说明或任何解释。按说话的停顿分段，段与段之间换行。",
+    "科普": "只输出要念出来的解说词，不要标题、分镜、画面说明或任何解释。按说话的停顿分段，段与段之间换行。",
 }
+
+LINE_FORMAT["训练"] = ("只输出教练在跟练时要说的话。按时间写，每行一句，格式是“起止秒｜要说的话”，例如“3–5｜……”；"
+                     "不说话的时间段不用写。不要标题、动作说明或任何解释。")
+
+ROLE = {"台词": "编剧", "口播": "短视频口播文案作者", "科普": "科普短视频的解说词作者", "训练": "儿童跟练视频的带练口令作者"}
 
 SCOPE = {
     "in-place": "只改被指出的那几处，其余文字一个字都不动。",
@@ -118,7 +124,7 @@ class OpenAICompatAdapter(ModelAdapter):
                 except Exception:
                     detail = ""
                 last = f"HTTP {e.code}" + (f"：{detail}" if detail else "")
-                if e.code in (429, 500, 502, 503, 504) and attempt < retries:
+                if e.code in (429, 500, 502, 503, 504, 524) and attempt < retries:
                     time.sleep(min(2 ** attempt, 20))
                     continue
                 raise AdapterError(f"{self.role}：请求失败（{last}）") from None
@@ -153,7 +159,7 @@ class OpenAICompatAdapter(ModelAdapter):
 
     def generation_messages(self, ctx: dict) -> list[dict]:
         line = ctx["line"]
-        system = f"你是中文{'编剧' if line == '台词' else '短视频口播文案'}作者。按用户给的 brief 写稿。{LINE_FORMAT[line]}"
+        system = f"你是中文{ROLE[line]}。按用户给的 brief 写稿。{LINE_FORMAT[line]}"
         skills = self._skills_text(["A"])
         if skills:
             system += "\n\n写作时遵守下面的 skill：\n\n" + skills

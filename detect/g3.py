@@ -30,6 +30,9 @@ METRIC_RULE = {
     "batch_distinct_3": "batch_diversity",
     "batch_self_bleu": "batch_diversity",
     "batch_bleu_current": "batch_diversity",
+    "exclaim_ratio": "exclaim_density",
+    "fragment_ratio": "fragment_ratio",
+    "bare_imperative_ratio": "bare_imperative",
 }
 BATCH_METRICS = ("batch_distinct_2", "batch_distinct_3", "batch_self_bleu", "batch_bleu_current")
 
@@ -212,7 +215,47 @@ def compute(doc: Doc, ctx: dict) -> tuple[dict, dict]:
 
     m.update(batch_metrics(doc.work, [_mask(t, ctx, doc) for t in _batch_texts(ctx)],
                            cfg["min_chars_for_batch"]))
+    um, upos = utterance_metrics(doc, sent, cfg)
+    m.update(um)
+    positions.update(upos)
     return m, positions
+
+
+# --- 话语类指标：情绪靠标点撑、碎句、没头没尾的口令（所有文体通用，容忍度放 profile 的阈值里） ---
+_END_EXCLAIM = re.compile(r"[！!][”」』）)…—\s]*$")
+
+
+def _is_interjection(body: str, inter: str) -> bool:
+    core = "".join(_units(body))
+    return bool(core) and all(ch in inter for ch in core)
+
+
+def utterance_metrics(doc: Doc, sent: list[tuple[int, int]], cfg: dict) -> tuple[dict, dict]:
+    """按句算三项比例。只由拟声词、叹词组成的句子（“哔——”“哎呀！”）不计入分母。"""
+    inter = cfg.get("interjections", "")
+    heads = cfg.get("imperative_heads", [])
+    reasons = cfg.get("reason_marks", [])
+    fmax, imax = cfg.get("fragment_max_chars", 4), cfg.get("imperative_max_chars", 8)
+    counted, excl, frag, bare = [], [], [], []
+    for s, e in sent:
+        body = doc.work[s:e].strip()
+        if not body or _is_interjection(body, inter):
+            continue
+        counted.append((s, e))
+        n = countable_len(body)
+        is_ex = bool(_END_EXCLAIM.search(body))
+        if is_ex:
+            excl.append((s, e))
+        if n <= fmax:
+            frag.append((s, e))
+        core = "".join(_units(body))
+        if is_ex and n <= imax and any(core.startswith(h) for h in heads) and not any(r in body for r in reasons):
+            bare.append((s, e))
+    k = len(counted)
+    ratio = (lambda xs: round(len(xs) / k, 3) if k >= 3 else None)
+    return ({"utterances": k, "exclaim_ratio": ratio(excl), "fragment_ratio": ratio(frag),
+             "bare_imperative_ratio": ratio(bare)},
+            {"exclaim_ratio": excl, "fragment_ratio": frag, "bare_imperative_ratio": bare})
 
 
 def _mask(text: str, ctx: dict, doc: Doc) -> str:

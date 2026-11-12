@@ -1,0 +1,44 @@
+{
+  "line": "训练",
+  "version": "0.1",
+  "rules": {
+    "rhetorical_question": "hint",
+    "triple_parallel": "hint",
+    "connector_density": "hint",
+    "buzzword": "hint",
+    "heading_density": "off",
+    "dash": "on",
+    "punchline_ending": "on"
+  },
+  "exceptions": [
+    {
+      "id": "count_and_countdown",
+      "desc": "数数、倒数、“还剩两次”是带练的正常手法"
+    },
+    {
+      "id": "short_cue",
+      "desc": "跟着动作的短口令是正常写法；但要听得出要做什么"
+    },
+    {
+      "id": "keep_connectives",
+      "desc": "不能为了去 AI 味删光关联词，避免改成电报体"
+    }
+  ],
+  "length": {
+    "unit": "sec",
+    "source": "brief.target.duration_sec",
+    "chars_per_min": null,
+    "tolerance": 0.15
+  },
+  "compliance": {
+    "enabled": false,
+    "industries": []
+  },
+  "fidelity": {
+    "exact": [
+      "facts[].value"
+    ],
+    "no_new_claims": true,
+    "no_new_numbers": false
+  }
+}
