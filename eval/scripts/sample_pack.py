@@ -110,7 +110,8 @@ def main():
         pub = {k: v for k, v in brief.items() if k not in ("source", "status", "fictional", "is_example")}
         items = []
         for r in rows:
-            vid = secrets.token_hex(4)
+            # 续跑时保留已有编号，已经打过的分不会对不上
+            vid = r.get("vid") or secrets.token_hex(4)
             r["vid"] = vid
             key[vid] = {"arm": r["arm"], "model": r["model"], "skills": r["skills"]}
             items.append({"vid": vid, "text": r["text"]})
