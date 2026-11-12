@@ -68,7 +68,7 @@ textarea{width:100%;min-height:50px;font:inherit;font-size:13px;color:var(--ink)
   <span id="status" role="status">载入中…</span>
 </header>
 <main id="main">
-  <p class="intro">稿子都不标出处，顺序每个人都不一样。每份回答三题：像不像 AI 写的、像不像一个人在对另一个人说话、写得好不好；标签和备注可选。评几份都行，随时可以停，下次打开接着评。</p>
+  <p class="intro">稿子都不标出处，顺序每个人都不一样。每份回答两题：像不像 AI 写的、写得好不好；标签和备注可选。评几份都行，随时可以停，下次打开接着评。</p>
 </main>
 
 <script type="application/json" id="blind">__BLIND_JSON__</script>
@@ -77,7 +77,7 @@ textarea{width:100%;min-height:50px;font:inherit;font-size:13px;color:var(--ink)
 const DATA = JSON.parse(document.getElementById("blind").textContent);
 const COMMON = ["说给旁观者听","靠标点撑情绪","碎句","没头没尾","像在念稿","套话","说教","太书面","编出来的细节","事实/设定不对"];
 const TAGS = {"台词":[...COMMON,"角色说话一个样","孩子听不懂"],"科普":[...COMMON,"承诺效果"],"训练":[...COMMON,"孩子跟不上","和动作对不上","左右说反"],"口播":[...COMMON,"承诺效果"]};
-const QS = [["ai","像不像 AI 写的？","肯定是人写的","肯定是 AI"],["talk","像不像一个人在对另一个人说话？","像念给旁观者听","就是在跟对方说"],["good","写得好不好？","不能用","可以直接用"]];
+const QS = [["ai","像不像 AI 写的？","肯定是人写的","肯定是 AI"],["good","写得好不好？","不能用","可以直接用"]];
 const $ = s => document.querySelector(s);
 const main = $("#main"), status = $("#status");
 let R = {}, NAME = "", cur = 0, ref = null, uid = "local", timer = null, saving = false, dirty = false, canSave = false;
@@ -87,7 +87,7 @@ function seeded(str){ let h = 1779033703 ^ str.length; for (let i = 0; i < str.l
   return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; }; }
 function order(b){ const r = seeded(uid + "|" + b.id), a = b.items.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function rec(bid, vid){ R[bid] = R[bid] || {items:{}}; R[bid].items = R[bid].items || {}; return R[bid].items[vid] = R[bid].items[vid] || {ai:null,talk:null,good:null,tags:[],note:""}; }
-const full = r => r && r.ai && r.talk && r.good;
+const full = r => r && r.ai && r.good;
 const doneB = b => b.items.every(it => full((R[b.id] || {items:{}}).items?.[it.vid]));
 function el(tag, attrs, ...kids){ const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs || {})){ if (k === "class") e.className = v; else if (k.startsWith("data-")) e.setAttribute(k, v); else if (k in e) e[k] = v; else e.setAttribute(k, v); }
   for (const k of kids) if (k != null) e.append(k.nodeType ? k : document.createTextNode(String(k))); return e; }

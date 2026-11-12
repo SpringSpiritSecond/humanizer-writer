@@ -63,7 +63,7 @@ function save(){$("#saved").textContent="保存中…";clearTimeout(timer);timer
   try{const r=await fetch("/api/ratings?rater="+RID,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:NAME,data:R})});
   $("#saved").textContent=r.ok?"已保存 "+new Date().toLocaleTimeString():"保存失败";}catch(e){$("#saved").textContent="保存失败";}},400);}
 function rec(bid,vid){R[bid]=R[bid]||{items:{}};R[bid].items[vid]=R[bid].items[vid]||{ai:null,talk:null,good:null,tags:[],note:""};return R[bid].items[vid];}
-function doneB(b){const r=R[b.id];return r&&b.items.every(it=>r.items[it.vid]&&r.items[it.vid].ai&&r.items[it.vid].talk&&r.items[it.vid].good)}
+function doneB(b){const r=R[b.id];return r&&b.items.every(it=>r.items[it.vid]&&r.items[it.vid].ai&&r.items[it.vid].good)}
 function briefHTML(b){const x=b.brief;let rows=[];
   if(b.line==="台词"){const s=x.scene_card||{};
     rows=[["背景",x.context],["前情",s.previously],["场景",s.location_time],["人物",(s.characters||[]).map(c=>`<b>${esc(c.name)}</b>：${esc(c.profile)}；想要：${esc(c.want)}`).join("<br>")],
@@ -79,13 +79,11 @@ function render(){
   $("#nav").innerHTML=data.briefs.map((b,i)=>{cnt[b.line]=(cnt[b.line]||0)+1;return `<button class="${i===cur?"on":""} ${doneB(b)?"done":""}" data-i="${i}">${b.line} ${cnt[b.line]} <span class="count">${PROG[b.id]||0}人</span></button>`}).join("");
   const b=data.briefs[cur];
   const items=order(b);
-  let h=briefHTML(b)+`<p class="hint">共 ${b.items.length} 份，顺序每个人都不一样。每份依次回答三题：像不像 AI 写的、像不像在对人说话、写得好不好；标签和备注可选。所有改动自动保存。</p><div class="grid">`;
+  let h=briefHTML(b)+`<p class="hint">共 ${b.items.length} 份，顺序每个人都不一样。每份回答两题：像不像 AI 写的、写得好不好；标签和备注可选。所有改动自动保存。</p><div class="grid">`;
   items.forEach((it,k)=>{const r=(R[b.id]&&R[b.id].items[it.vid])||{};
     h+=`<div class="v" data-v="${it.vid}"><h3>稿 ${k+1}<span>${it.text.length} 字</span></h3><div class="txt">${esc(it.text)}</div>
     <div class="q">像不像 AI 写的？</div><div class="scale" data-k="ai">${[1,2,3,4,5].map(n=>`<button class="${r.ai===n?"on":""}" data-n="${n}">${n}</button>`).join("")}</div>
     <div class="ends"><span>肯定是人写的</span><span>肯定是 AI</span></div>
-    <div class="q">像不像一个人在对另一个人说话？</div><div class="scale" data-k="talk">${[1,2,3,4,5].map(n=>`<button class="${r.talk===n?"on":""}" data-n="${n}">${n}</button>`).join("")}</div>
-    <div class="ends"><span>像在念给旁观者听</span><span>就是在跟对方说</span></div>
     <div class="q">写得好不好？</div><div class="scale" data-k="good">${[1,2,3,4,5].map(n=>`<button class="${r.good===n?"on":""}" data-n="${n}">${n}</button>`).join("")}</div>
     <div class="ends"><span>不能用</span><span>可以直接用</span></div>
     <div class="tags">${TAGS[b.line].map(t=>`<button class="${(r.tags||[]).includes(t)?"on":""}">${t}</button>`).join("")}</div>

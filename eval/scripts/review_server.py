@@ -45,7 +45,7 @@ def main():
                 continue
             for bid, vids in need.items():
                 items = (r.get(bid) or {}).get("items", {})
-                if vids and all((items.get(v) or {}).get("ai") and (items.get(v) or {}).get("talk")
+                if vids and all((items.get(v) or {}).get("ai")
                                 and (items.get(v) or {}).get("good") for v in vids):
                     out[bid] += 1
         return out
