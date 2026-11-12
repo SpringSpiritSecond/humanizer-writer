@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures as cf
+import hashlib
 import json
 import random
 import secrets
@@ -36,25 +37,54 @@ def load(p):
     return json.loads(Path(p).read_text(encoding="utf-8"))
 
 
-def one(arm: dict, cfg: dict, brief: dict) -> dict:
+def arm_slug(arm_id: str) -> str:
+    return hashlib.md5(arm_id.encode("utf-8")).hexdigest()[:10]
+
+
+def one(arm: dict, cfg: dict, brief: dict, out: Path) -> dict:
     m = cfg["models"][arm["model"]]
-    params = {**cfg["defaults"], "api_key_env": m["api_key_env"]}
-    slots = {"A": {"skills": [resolve_skill(s) for s in arm["skills"]], "combine": "serial"}}
-    ad = OpenAICompatAdapter("generator", m["model"], m["vendor"], params, slots)
+    params = {**cfg["defaults"], "api_key_env": m.get("api_key_env") or "UNUSED_EXTERNAL", "base_url": "https://external.invalid"}         if m.get("external") else {**cfg["defaults"], "api_key_env": m["api_key_env"]}
+    slot = {"skills": [resolve_skill(s) for s in arm["skills"]], "combine": "serial"}
+    for k in ("placement", "mode"):
+        if arm.get(k):
+            slot[k] = arm[k]
+    if arm.get("plan_skills"):
+        slot["plan_skills"] = [resolve_skill(s) for s in arm["plan_skills"]]
+    ad = OpenAICompatAdapter("generator", m["model"], m["vendor"], params, {"A": slot})
     line = brief["line"]
-    rec = {"arm": arm["id"], "model": m["model"], "skills": arm["skills"], "brief_id": brief["id"], "line": line}
+    rec = {"arm": arm["id"], "model": m["model"], "skills": arm["skills"], "brief_id": brief["id"], "line": line,
+           "orchestration": {k: arm[k] for k in ("placement", "mode", "plan_skills") if arm.get(k)}}
     t0 = time.monotonic()
-    try:
-        text = ad.generate({"line": line, "brief": brief}, 1)[0]
-    except (AdapterError, Exception) as e:  # noqa: BLE001
-        rec.update(error=f"{type(e).__name__}: {e}", seconds=round(time.monotonic() - t0, 1))
-        return rec
+    if m.get("external"):
+        # 不走 API：把和 API 完全一样的提示词写到文件，由外部（例如干净的 Claude 子代理）生成，输出放回 <brief>.txt
+        d = out / "external" / arm_slug(arm["id"])
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "arm.txt").write_text(arm["id"], encoding="utf-8")
+        ctx0 = {"line": line, "brief": brief}
+        prompt = {"arm": arm["id"], "brief_id": brief["id"]}
+        if slot.get("mode") == "plan_then_write":
+            prompt["step1_plan_messages"] = ad.plan_messages(ctx0)
+            prompt["step2_write_messages"] = ad.generation_messages(ctx0, plan="<第一步的输出>")
+        else:
+            prompt["messages"] = ad.generation_messages(ctx0)
+        (d / f"{brief['id']}.prompt.json").write_text(json.dumps(prompt, ensure_ascii=False, indent=1), encoding="utf-8")
+        f = d / f"{brief['id']}.txt"
+        if not f.exists() or not f.read_text(encoding="utf-8").strip():
+            rec.update(error="等待外部生成：" + str(f))
+            return rec
+        text = f.read_text(encoding="utf-8").strip()
+    else:
+        try:
+            text = ad.generate({"line": line, "brief": brief}, 1)[0]
+        except (AdapterError, Exception) as e:  # noqa: BLE001
+            rec.update(error=f"{type(e).__name__}: {e}", seconds=round(time.monotonic() - t0, 1))
+            return rec
     text = normalize(text, NORM_LINE[line])
     profile = load(ROOT / PROFILE[line])
     ctx = {"line": NORM_LINE[line], "brief": brief, "profile": profile, "text": text, "round": 0,
            "history": [], "config": {}}
     rec.update(text=text, chars=len(text), seconds=round(time.monotonic() - t0, 1),
-               usage=ad.describe()["usage"],
+               usage=None if m.get("external") else ad.describe()["usage"],
                s2_hits=[{k: h.get(k) for k in ("rule", "excerpt", "severity")} for h in s2(ctx)["hits"]],
                g3_metrics=g3(ctx)["metrics"])
     return rec
@@ -67,6 +97,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--only-line", default=None)
+    ap.add_argument("--briefs-only", nargs="*", default=None, help="只用这些 brief id")
     ap.add_argument("--resume", action="store_true", help="保留 results.json 里已成功的，只补跑缺的和失败的")
     a = ap.parse_args()
 
@@ -80,6 +111,8 @@ def main():
         for arm in arms:
             # 参赛组合可以用另一版 brief（"briefs": "<目录>"），用来比较 brief 写法本身的影响
             for bf in sorted((Path(arm.get("briefs") or a.briefs) / line).glob("*.json")):
+                if a.briefs_only and bf.stem not in a.briefs_only:
+                    continue
                 jobs.append((arm, load(bf)))
     results = []
     prev = out / "results.json"
@@ -91,7 +124,7 @@ def main():
     print(f"共 {len(jobs)} 份，{a.workers} 路并发")
     total = len(results) + len(jobs)
     with cf.ThreadPoolExecutor(a.workers) as ex:
-        futs = {ex.submit(one, arm, cfg, brief): (arm["id"], brief["id"]) for arm, brief in jobs}
+        futs = {ex.submit(one, arm, cfg, brief, out): (arm["id"], brief["id"]) for arm, brief in jobs}
         for f in cf.as_completed(futs):
             r = f.result()
             results.append(r)
@@ -101,8 +134,10 @@ def main():
     rng = random.Random(secrets.randbits(64))
     key, blind = {}, {"briefs": []}
     briefs = {}
+    wanted = {(line, arm["id"]) for line, arms in cfg["arms"].items() for arm in arms}
     for r in results:
-        briefs.setdefault(r["brief_id"], []).append(r)
+        if (r["line"], r["arm"]) in wanted and (not a.briefs_only or r["brief_id"] in a.briefs_only):      # 只把这一轮组合表里的稿子放进盲审
+            briefs.setdefault(r["brief_id"], []).append(r)
     for bid in sorted(briefs):
         rows = [r for r in briefs[bid] if r.get("text")]
         rng.shuffle(rows)
@@ -113,7 +148,7 @@ def main():
             # 续跑时保留已有编号，已经打过的分不会对不上
             vid = r.get("vid") or secrets.token_hex(4)
             r["vid"] = vid
-            key[vid] = {"arm": r["arm"], "model": r["model"], "skills": r["skills"]}
+            key[vid] = {"arm": r["arm"], "model": r["model"], "skills": r["skills"], "orchestration": r.get("orchestration") or {}}
             items.append({"vid": vid, "text": r["text"]})
         blind["briefs"].append({"id": bid, "line": rows[0]["line"] if rows else brief["line"], "brief": pub, "items": items})
 

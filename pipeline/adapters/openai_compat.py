@@ -157,14 +157,36 @@ class OpenAICompatAdapter(ModelAdapter):
                     parts.append(f"<skill id=\"{s.id}\">\n{t}\n</skill>")
         return "\n\n".join(parts)
 
-    def generation_messages(self, ctx: dict) -> list[dict]:
+    def generation_messages(self, ctx: dict, plan: str | None = None) -> list[dict]:
+        """槽位 A 的编排：
+        placement = "system"（默认，skill 放 system）或 "user"（skill 放在用户消息里、brief 前面）；
+        mode = "plan_then_write" 时先用 plan_skills 规划，再按规划写（见 generate）。"""
         line = ctx["line"]
+        slot = self.slots.get("A") or {}
         system = f"你是中文{ROLE[line]}。按用户给的 brief 写稿。{LINE_FORMAT[line]}"
         skills = self._skills_text(["A"])
-        if skills:
-            system += "\n\n写作时遵守下面的 skill：\n\n" + skills
         brief = json.dumps(_public_brief(ctx["brief"]), ensure_ascii=False, indent=1)
-        return [{"role": "system", "content": system}, {"role": "user", "content": f"brief：\n{brief}"}]
+        user = f"brief：\n{brief}"
+        if plan:
+            user += f"\n\n写之前你已经想好的要点（照着写，不要把要点本身写进稿子）：\n{plan}"
+        if skills and slot.get("placement") == "user":
+            user = "写作时遵守下面的 skill：\n\n" + skills + "\n\n" + user
+        elif skills:
+            system += "\n\n写作时遵守下面的 skill：\n\n" + skills
+        return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+    def plan_messages(self, ctx: dict) -> list[dict]:
+        line = ctx["line"]
+        slot = self.slots.get("A") or {}
+        system = f"你是中文{ROLE[line]}。先不写稿，只做写之前的规划。"
+        plan_skills = [s for s in slot.get("plan_skills", []) if s.text().strip()]
+        if plan_skills:
+            system += "\n\n规划时遵守下面的 skill：\n\n" + "\n\n".join(
+                f"<skill id=\"{s.id}\">\n{s.text().strip()}\n</skill>" for s in plan_skills)
+        brief = json.dumps(_public_brief(ctx["brief"]), ensure_ascii=False, indent=1)
+        user = (f"brief：\n{brief}\n\n按顺序列出这篇稿子要说的每一步：谁在说、对谁说、想让对方怎样、要带出的具体信息。"
+                "只列要点，每条一行，不要写成稿子。")
+        return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
     def rewrite_messages(self, ctx: dict, hits: list[dict]) -> list[dict]:
         line = ctx["line"]
@@ -186,6 +208,12 @@ class OpenAICompatAdapter(ModelAdapter):
     # ---------- 接口 ----------
 
     def generate(self, ctx: dict, n: int) -> list[str]:
+        if (self.slots.get("A") or {}).get("mode") == "plan_then_write":
+            out = []
+            for i in range(n):
+                plan = self._chat(self.plan_messages(ctx), f"plan#{i}")
+                out.append(self._chat(self.generation_messages(ctx, plan=plan), f"generate#{i}"))
+            return out
         msgs = self.generation_messages(ctx)
         return [self._chat(msgs, f"generate#{i}") for i in range(n)]
 
