@@ -1,6 +1,6 @@
 # writer：写稿工作流（当前推荐版）
 
-一条命令：检查 brief → 写 3 份 → 逐份检查 → 出报告，由人挑。适用于任何中文文体。为什么这样配，见 [docs/工作流-当前推荐.md](../docs/工作流-当前推荐.md)。
+一条命令：检查 brief → 写 3 份 → 逐份检查 → 出报告，由人挑。适用于任何中文文体。先看 [handoff/使用手册.md](../handoff/使用手册.md)。
 
 ## 1. 写 brief
 
@@ -52,6 +52,6 @@ python -m writer check-text --brief <brief.json> --text <稿子.txt>
 
 检查只是提示，**写得好不好由人判断**。报告里的“建议先看”只是按问题从少到多排了个序。
 
-## 4. 换配置
+## 4. 配置
 
-[config.json](config.json)：模型、skill、份数。改了以后，最好拿盲审验证一遍（见 `eval/scripts/`），不要凭感觉换。
+[config.json](config.json)：模型、skill、份数。这些是维护者调好的，使用时不用改，见 [docs/维护说明.md](../docs/维护说明.md)。
