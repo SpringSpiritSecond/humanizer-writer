@@ -5,3 +5,4 @@ __pycache__/
 pipeline/data/runs/
 eval/out/
 writer/out/
+writer/briefs/

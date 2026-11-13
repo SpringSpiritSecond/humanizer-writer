@@ -21,7 +21,18 @@ from pipeline.textutil import normalize
 ROOT = Path(__file__).resolve().parents[1]
 PROFILES = {"台词": "profiles/台词.json", "训练": "profiles/训练.json", "口播": "profiles/口播.json"}
 NUM = re.compile(r"\d+(?:\.\d+)?%?")
+CLOCK_MIN = re.compile(r"(?<=\d)[:：]\d{2}")   # 9:00 里的 :00 只是写法不同，不算新数字
 CJK = re.compile(r"[一-鿿]")
+
+EXTRA_PROMPT = (
+    "下面是写稿依据的材料，和照着它写出来的一篇稿子。逐句对照，找出稿子里材料没有提供的事实、安排、承诺、"
+    "已经做过的事、时间、地点、人物或数字。\n"
+    "这些不算多出来的：对材料的同义改写或换算；按常识给对方的提醒和建议（例如提前储水）；礼貌用语。\n"
+    "只输出 JSON 数组，每项是 {\"句子\": 稿子原句, \"多出来的\": 材料里没有的那部分}；没有就输出 []。")
+
+
+def _nums(s: str) -> set[str]:
+    return set(NUM.findall(CLOCK_MIN.sub("", s)))
 
 
 def _strings(v) -> list[str]:
@@ -60,10 +71,10 @@ def check_brief(brief: dict) -> dict:
 
 # ---------------- 写稿 ----------------
 
-def make_adapter(cfg: dict) -> OpenAICompatAdapter:
+def make_adapter(cfg: dict, with_skills: bool = True) -> OpenAICompatAdapter:
     m = cfg["model"]
     params = {k: v for k, v in m.items() if k not in ("name", "vendor")}
-    slot = {"skills": [resolve_skill(s) for s in cfg.get("skills", [])], "combine": "serial"}
+    slot = {"skills": [resolve_skill(s) for s in cfg.get("skills", [])] if with_skills else [], "combine": "serial"}
     return OpenAICompatAdapter("generator", m["name"], m.get("vendor", ""), params, {"A": slot})
 
 
@@ -81,8 +92,32 @@ def _profile(line: str) -> tuple[str, dict]:
     return ("台词" if line == "台词" else "口播"), p
 
 
-def check_draft(text: str, brief: dict, cfg: dict) -> dict:
-    """硬问题（fail）：写了不能出现的说法；brief 里的数字没写对。其余只提示。"""
+def find_extra(text: str, brief: dict, checker) -> list[dict] | None:
+    """用模型对照 brief，找稿子里多出来的事实、安排和承诺。规则检查拦不住这类问题：
+    新人试用时，一份停水通知编了“已在门厅张贴纸质通知”“帮忙提水”，规则检查却报“没有发现问题”。
+    返回 None 表示没检查（没有模型，或模型出错）。"""
+    if checker is None:
+        return None
+    material = json.dumps(_public_brief(brief), ensure_ascii=False, indent=1)
+    msgs = [{"role": "system", "content": EXTRA_PROMPT},
+            {"role": "user", "content": f"材料：\n{material}\n\n稿子：\n{text}"}]
+    try:
+        out = checker._chat(msgs, "extra-check")
+    except Exception:  # noqa: BLE001
+        return None
+    m = re.search(r"\[.*\]", out, re.S)
+    if not m:
+        return None
+    try:
+        items = json.loads(m.group(0))
+    except ValueError:
+        return None
+    return [i for i in items if isinstance(i, dict) and i.get("多出来的")]
+
+
+def check_draft(text: str, brief: dict, cfg: dict, checker=None) -> dict:
+    """结论三档：不过（写了不能出现的说法，或事实里的数字没写对）、待确认（有 brief 里没有的内容）、通过。
+    其余问题只作提示。checker 是用来对照 brief 的模型；为 None 时跳过“多出来的内容”检查。"""
     norm_line, profile = _profile(brief["line"])
     text = normalize(text, norm_line)
     fails, flags = [], []
@@ -93,10 +128,10 @@ def check_draft(text: str, brief: dict, cfg: dict) -> dict:
 
     fact_text = " ".join(_strings(brief.get("facts")))
     brief_text = " ".join(_strings(_public_brief(brief)))
-    for num in sorted(set(NUM.findall(fact_text))):
+    for num in sorted(_nums(fact_text)):
         if num not in text:
             fails.append(f"事实里的数字 {num} 没写进稿子（或写法不一样）")
-    extra = sorted(set(NUM.findall(text)) - set(NUM.findall(brief_text)))
+    extra = sorted(_nums(text) - _nums(brief_text))
     if extra and brief["line"] != "训练":
         flags.append("brief 里没有的数字：" + "、".join(extra) + "（是换算还是编的？）")
 
@@ -124,14 +159,17 @@ def check_draft(text: str, brief: dict, cfg: dict) -> dict:
     for h in hits[:6]:
         flags.append(f"句式：{h['rule']}「{h.get('excerpt', '')[:24]}」")
 
-    return {"text": text, "chars": chars, "pass": not fails, "fails": fails, "flags": flags,
+    extra_items = find_extra(text, brief, checker)
+    status = "不过" if fails else ("待确认" if extra_items else "通过")
+    return {"text": text, "chars": chars, "pass": not fails, "status": status, "fails": fails, "flags": flags,
+            "extra": extra_items or [], "extra_checked": extra_items is not None,
             "metrics": {**{k: tr[k] for k in ("prompt_trace", "brief_echo_max", "colloquial_per_kchar")},
                         **{k: m.get(k) for k in ("exclaim_ratio", "fragment_ratio", "bare_imperative_ratio")}}}
 
 
 # ---------------- 跑一份 brief ----------------
 
-def run(brief_path: Path, out_dir: Path, cfg: dict, n: int | None = None, adapter=None) -> dict:
+def run(brief_path: Path, out_dir: Path, cfg: dict, n: int | None = None, adapter=None, checker="auto") -> dict:
     brief = json.loads(Path(brief_path).read_text(encoding="utf-8"))
     out_dir.mkdir(parents=True, exist_ok=True)
     bc = check_brief(brief)
@@ -142,12 +180,12 @@ def run(brief_path: Path, out_dir: Path, cfg: dict, n: int | None = None, adapte
         return report
     texts, usage = write(brief, cfg, n or cfg.get("n", 3), adapter=adapter)
     report["usage"] = usage
+    if checker == "auto":
+        checker = make_adapter(cfg, with_skills=False) if cfg.get("extra_check", True) else None
     for i, t in enumerate(texts, 1):
-        c = check_draft(t, brief, cfg)
+        c = check_draft(t, brief, cfg, checker=checker)
         (out_dir / f"稿{i}.txt").write_text(c["text"] + "\n", encoding="utf-8")
-        report["drafts"].append({"no": i, **{k: v for k, v in c.items() if k != "text"}})
-    order = sorted(report["drafts"], key=lambda d: (not d["pass"], len(d["flags"])))
-    report["suggested_order"] = [d["no"] for d in order]
+        report["drafts"].append({"no": i, **c})
     _write_report(out_dir, brief, report)
     return report
 
@@ -162,11 +200,15 @@ def _write_report(out_dir: Path, brief: dict, report: dict):
     if bc["warnings"]:
         L += ["## brief 提示", ""] + [f"- {w}" for w in bc["warnings"]] + [""]
     if report["drafts"]:
-        L += ["## 稿子", "", "检查只是提示，挑哪份由人定。建议先看：" + "、".join(f"稿{n}" for n in report["suggested_order"]), ""]
+        L += ["## 稿子", "",
+              "结论分三档：**不过**＝写了不能出现的说法，或事实里的数字不对；**待确认**＝有 brief 里没有的内容，"
+              "确认属实再用；**通过**＝没查出硬问题。写得好不好检查不出来，挑哪份由人定。", ""]
         for d in report["drafts"]:
-            L.append(f"### 稿{d['no']}（{d['chars']} 字）{'' if d['pass'] else '— 不过'}")
-            L += [f"- 不过：{x}" for x in d["fails"]] + [f"- 提示：{x}" for x in d["flags"]]
-            if d["pass"] and not d["flags"]:
-                L.append("- 没有发现问题")
-            L.append("")
+            L.append(f"### 稿{d['no']}：{d['status']}（{d['chars']} 字）")
+            L += [f"- 不过：{x}" for x in d["fails"]]
+            L += [f"- 待确认：“{e.get('多出来的', '')}”（{e.get('句子', '')}）——brief 里没有" for e in d.get("extra", [])]
+            if not d.get("extra_checked"):
+                L.append("- 没做“多出来的内容”检查（没有可用的模型），请自己对照 brief 看一遍")
+            L += [f"- 提示：{x}" for x in d["flags"]]
+            L += ["", "```", d["text"], "```", ""]
     (out_dir / "report.md").write_text("\n".join(L), encoding="utf-8")
