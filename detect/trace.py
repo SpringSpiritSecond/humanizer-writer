@@ -5,7 +5,7 @@
 - prompt_trace：brief 里只用来检查的约束（check_only、must_not）中的说法，在稿子里出现了几次。
   写稿模型看不到这些内容，所以只要出现，就说明是自己编出来的，或者是 brief 别处漏出来的。
 - brief_echo：brief 里描述场景的词（情况、画面提示、背景、说话人）在稿子里被重复的次数，
-  只报出重复 3 次以上的词。这是“brief 强调什么，稿子就反复说什么”。
+  只报出重复 4 次以上的词。这是“brief 强调什么，稿子就反复说什么”。
 - colloquial_per_kchar：口语化标记的密度（咱们、啥、呗……）。这项没有统一的好坏标准，
   用来比较：同一场景下加 skill 后是否明显更口语，或与同类场景相比高出很多。
 - template_ratio（批量）：同一组合在不同 brief 下写出几乎一样的句子，这类句子的占比。
@@ -52,9 +52,21 @@ def prompt_trace(text: str, brief: dict) -> dict:
     return {"prompt_trace": sum(found.values()), "prompt_trace_terms": found}
 
 
-def brief_echo(text: str, brief: dict, min_count: int = 3) -> dict:
-    src = " ".join(_strings({k: brief.get(k) for k in ("situation", "screen_cues", "context", "speaker", "topic")}))
-    grams = {src[i:i + n] for n in (2, 3) for i in range(len(src) - n + 1) if all(CJK.match(c) for c in src[i:i + n])}
+def _anchors(brief: dict) -> str:
+    """本来就该在稿子里反复出现的东西：要讲的事实、主题、人名、道具、锁定内容。brief 回声不算这些。"""
+    sc = brief.get("scene_card") or {}
+    names = [c.get("name", "") for c in sc.get("characters", []) if isinstance(c, dict)]
+    return " ".join(_strings([brief.get("facts"), brief.get("topic"), brief.get("locked"), names,
+                              brief.get("must_include")]))
+
+
+def brief_echo(text: str, brief: dict, min_count: int = 4) -> dict:
+    """brief 里描述情况、提醒、背景的词在稿子里被重复的次数（第三轮：“对面”每份出现 1–6 次）。
+    第四轮发现台词里“星图”“梯梯”这些人名道具被误报，所以 _anchors 里的词不算。"""
+    src = " ".join(_strings({k: brief.get(k) for k in ("situation", "screen_cues", "context", "speaker")}))
+    anchors = _anchors(brief)
+    grams = {src[i:i + n] for n in (2, 3) for i in range(len(src) - n + 1)
+             if all(CJK.match(c) for c in src[i:i + n]) and src[i:i + n] not in anchors}
     counts = {g: text.count(g) for g in grams}
     rep = {g: c for g, c in counts.items() if c >= min_count}
     # 去掉被更长重复词包含的短词

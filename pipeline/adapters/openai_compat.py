@@ -41,6 +41,22 @@ LINE_FORMAT = {
 LINE_FORMAT["训练"] = ("只输出教练在跟练时要说的话。按时间写，每行一句，格式是“起止秒｜要说的话”，例如“3–5｜……”；"
                      "不说话的时间段不用写。不要标题、动作说明或任何解释。")
 
+GENERIC_FORMAT = "只输出正文，就是最后要交付的文字，不要标题、说明或任何解释。"
+
+
+def _role(line: str) -> str:
+    return ROLE.get(line, "写作者")
+
+
+def _fmt(ctx: dict) -> str:
+    """输出格式：已知文体用内置写法；其他文体用通用写法，再加上 brief 里的 format（如有）。"""
+    base = LINE_FORMAT.get(ctx["line"], GENERIC_FORMAT)
+    extra = (ctx.get("brief") or {}).get("format")
+    if isinstance(extra, str) and extra.strip() and ctx["line"] not in LINE_FORMAT:
+        base += f"格式：{extra.strip()}"
+    return base
+
+
 ROLE = {"台词": "编剧", "口播": "短视频口播文案作者", "科普": "科普短视频的解说词作者", "训练": "儿童跟练视频的带练口令作者"}
 
 SCOPE = {
@@ -169,7 +185,7 @@ class OpenAICompatAdapter(ModelAdapter):
         mode = "plan_then_write" 时先用 plan_skills 规划，再按规划写（见 generate）。"""
         line = ctx["line"]
         slot = self.slots.get("A") or {}
-        system = f"你是中文{ROLE[line]}。按用户给的 brief 写稿。{LINE_FORMAT[line]}"
+        system = f"你是中文{_role(line)}。按用户给的 brief 写稿。{_fmt(ctx)}"
         skills = self._skills_text(["A"])
         brief = json.dumps(_public_brief(ctx["brief"]), ensure_ascii=False, indent=1)
         user = f"brief：\n{brief}"
@@ -184,7 +200,7 @@ class OpenAICompatAdapter(ModelAdapter):
     def plan_messages(self, ctx: dict) -> list[dict]:
         line = ctx["line"]
         slot = self.slots.get("A") or {}
-        system = f"你是中文{ROLE[line]}。先不写稿，只做写之前的规划。"
+        system = f"你是中文{_role(line)}。先不写稿，只做写之前的规划。"
         plan_skills = [s for s in slot.get("plan_skills", []) if s.text().strip()]
         if plan_skills:
             system += "\n\n规划时遵守下面的 skill：\n\n" + "\n\n".join(
@@ -199,7 +215,7 @@ class OpenAICompatAdapter(ModelAdapter):
         scope = (self.slots.get("C") or {}).get("scope", "in-place")
         system = (f"你在修改一篇中文{line}稿。{SCOPE.get(scope, SCOPE['in-place'])}"
                   f"brief 里的事实、数字、人名、锁定台词、品牌词和行动号召必须原样保留，不能新增 brief 里没有的事实、数字或承诺。"
-                  f"{LINE_FORMAT[line]}")
+                  f"{_fmt(ctx)}")
         skills = self._skills_text(["B"])
         if skills:
             system += "\n\n修改时遵守下面的 skill：\n\n" + skills
