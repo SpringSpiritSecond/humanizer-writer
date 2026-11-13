@@ -1,6 +1,6 @@
 """python -m writer run --brief <brief.json> [--out <目录>] [--n 3] [--config writer/config.json]
 python -m writer check --brief <brief.json>              # 只检查 brief，不写稿
-python -m writer check-text --brief <brief.json> --text <稿子.txt>   # 检查一份现成稿子
+python -m writer check-text --brief <brief.json> --text <稿子.txt> [--no-model]   # 检查一份现成稿子
 """
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ import sys
 import time
 from pathlib import Path
 
-from .core import ROOT, check_brief, check_draft, run
+from .core import ROOT, check_brief, check_draft, make_adapter, run
 
 
 def main(argv=None):
@@ -28,6 +28,7 @@ def main(argv=None):
     t.add_argument("--brief", required=True)
     t.add_argument("--text", required=True)
     t.add_argument("--config", default=str(ROOT / "writer/config.json"))
+    t.add_argument("--no-model", action="store_true", help="不调用模型，跳过“多出来的内容”检查")
     a = ap.parse_args(argv)
 
     brief = json.loads(Path(a.brief).read_text(encoding="utf-8"))
@@ -37,7 +38,8 @@ def main(argv=None):
         return 0 if res["ok"] else 2
     cfg = json.loads(Path(a.config).read_text(encoding="utf-8"))
     if a.cmd == "check-text":
-        res = check_draft(Path(a.text).read_text(encoding="utf-8"), brief, cfg)
+        checker = None if a.no_model else make_adapter(cfg, with_skills=False)
+        res = check_draft(Path(a.text).read_text(encoding="utf-8"), brief, cfg, checker=checker)
         res.pop("text")
         print(json.dumps(res, ensure_ascii=False, indent=1))
         return 0 if res["pass"] else 1

@@ -54,7 +54,33 @@ def test_run_writes_drafts_and_report(tmp_path):
     p.write_text(json.dumps(BRIEF, ensure_ascii=False), encoding="utf-8")
     good = "您说孩子跳绳手脚对不上。我们会让他做异侧拍，每组 16 下，慢慢加快。"
     bad = "别担心，这不是左右脑的问题。"
-    rep = run(p, tmp_path / "out", CFG, n=2, adapter=Fake([bad, good]))
-    assert [d["pass"] for d in rep["drafts"]] == [False, True]
-    assert rep["suggested_order"][0] == 2
-    assert (tmp_path / "out" / "稿1.txt").exists() and (tmp_path / "out" / "report.md").exists()
+    rep = run(p, tmp_path / "out", CFG, n=2, adapter=Fake([bad, good]), checker=None)
+    assert [d["status"] for d in rep["drafts"]] == ["不过", "通过"]
+    assert "suggested_order" not in rep
+    md = (tmp_path / "out" / "report.md").read_text(encoding="utf-8")
+    assert good in md and "没做“多出来的内容”检查" in md
+
+
+class Checker:
+    def __init__(self, out):
+        self.out = out
+
+    def _chat(self, msgs, purpose):
+        assert "左右脑" not in msgs[1]["content"]      # check_only 不给检查模型看
+        return self.out
+
+
+def test_extra_content_marks_to_confirm():
+    text = "您说孩子跳绳手脚对不上。我们会让他做异侧拍，每组 16 下。我们已经给您寄了练习册。"
+    r = check_draft(text, BRIEF, CFG, checker=Checker('[{"句子": "我们已经给您寄了练习册。", "多出来的": "寄了练习册"}]'))
+    assert r["status"] == "待确认" and r["extra"][0]["多出来的"] == "寄了练习册"
+    r2 = check_draft(text, BRIEF, CFG, checker=Checker("没有。[]"))
+    assert r2["status"] == "通过" and r2["extra_checked"]
+    r3 = check_draft(text, BRIEF, CFG, checker=Checker("乱码"))
+    assert r3["status"] == "通过" and not r3["extra_checked"]   # 模型没给出结果，算没检查
+
+
+def test_clock_minutes_are_not_new_numbers():
+    b = {**BRIEF, "facts": [{"field": "时间", "value": "周四上午 9 点到下午 3 点"}]}
+    r = check_draft("周四上午 9:00 到下午 3:00 停水。", b, CFG)
+    assert not any("00" in f for f in r["flags"]) and r["pass"]
