@@ -1,22 +1,22 @@
 # humanizer-writer
 
-一套已经调好的中文去 AI 味写稿工作流，适用于任何中文文案。
+一套已经调好的中文去 AI 味写稿方法，适用于任何中文文案。用哪个 AI、在什么地方用都行。
 
 ## 先看这个
 
-**[handoff/使用手册.md](handoff/使用手册.md)**：怎么写 brief、怎么用、怎么挑稿，十分钟看完。
+**[handoff/使用手册.md](handoff/使用手册.md)**：讲 brief 怎么写、写稿规则、怎么挑稿，十分钟能看完。
 
-一句话：**brief 只写场景和事实，不写风格要求，也不写不能说的话；一次写 3 份，你来挑。写稿模型推荐 Gemini 4 Argon。**
+一句话：**brief 只写场景和事实，不写风格要求，也不写不能说的话；一次写 3 份，挑一份。** 我们比较过几个模型，Gemini 4 Argon 效果最好，推荐用它，但不限定。
 
-## 三种用法
+## 仓库里现成的工具（可选）
 
-| 你是 | 怎么用 |
+方法本身不依赖这些工具，用得上就用：
+
+| 工具 | 用途 |
 |---|---|
-| 只想写稿，不碰代码 | 打开一个 AI 聊天网页（推荐 Gemini），把 [handoff/网页聊天提示词.md](handoff/网页聊天提示词.md) 里的内容复制进去，填好就能用 |
-| 用 Claude Code 或其他 AI 助手 | 在这个仓库里打开 Claude Code，直接说“帮我写一段……”；或者把 [handoff/skill/humanizer-writer](handoff/skill/humanizer-writer/) 复制到 `~/.claude/skills/`，在别的地方也能用 |
-| 会用命令行 | `python -m writer run --brief 你的brief.json`，详见 [writer/README.md](writer/README.md) |
-
-命令行默认调用 Gemini，需要设置环境变量 `RELAYROUTER_BASE_URL` 和 `RELAYROUTER_API_KEY`，用你自己或团队的 key。需要 Python 3.11 及以上，不用另外装依赖。
+| [handoff/网页聊天提示词.md](handoff/网页聊天提示词.md) | 一段写好的提示词，贴进任何 AI 聊天里就能用 |
+| [handoff/skill/humanizer-writer](handoff/skill/humanizer-writer/) | 给 AI 助手（比如 Claude Code）用的 skill；在这个仓库里打开 AI 助手时会自动读到 |
+| [writer/](writer/README.md) | 命令行：`python -m writer run --brief 你的brief.json`，写 3 份并自动检查。默认调用 Gemini，也可以换成其他模型。需要你自己的 API key（环境变量 `RELAYROUTER_BASE_URL`、`RELAYROUTER_API_KEY`），以及 Python 3.11 及以上 |
 
 ---
 
