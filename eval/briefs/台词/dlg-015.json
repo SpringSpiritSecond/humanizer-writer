@@ -1,0 +1,52 @@
+{
+  "id": "dlg-015",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "急诊夜班，同时来了两个发烧的孩子。",
+    "location_time": "儿童医院急诊分诊台，凌晨两点",
+    "characters": [
+      {
+        "name": "姜护士",
+        "profile": "分诊护士，干了八年，语气平，手上不停",
+        "want": "按分诊级别处理，不让家属插队"
+      },
+      {
+        "name": "马先生",
+        "profile": "家长，孩子三十九度，说话越来越大声",
+        "want": "让自己的孩子先看"
+      },
+      {
+        "name": "梁医生",
+        "profile": "值班医生，刚下一台抢救",
+        "want": "先看病情更重的那个"
+      }
+    ],
+    "scene_goal": "两个孩子按病情先后看上病",
+    "conflict": "马先生先到，但另一个孩子有抽搐史被排在前面；马先生认为医院不公平",
+    "beats": [
+      "马先生要求先看，姜护士解释分诊级别",
+      "马先生拍桌子，要找领导",
+      "梁医生出来，先给马先生的孩子量了一次体温",
+      "马先生看着另一个家长抱着孩子进诊室，坐了回去"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "体温计",
+      "分诊单"
+    ]
+  },
+  "target": {
+    "duration_sec": 150,
+    "format": "角色名：台词；（动作线）"
+  }
+}

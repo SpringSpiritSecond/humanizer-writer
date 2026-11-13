@@ -1,0 +1,57 @@
+{
+  "id": "dlg-011",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "小区广场晚上七点到九点归广场舞队，今天来了一群练轮滑的孩子家长。",
+    "location_time": "小区广场，晚上六点五十",
+    "characters": [
+      {
+        "name": "王阿姨",
+        "profile": "广场舞领队，嗓门大，音箱随身带",
+        "want": "七点准时开跳"
+      },
+      {
+        "name": "马大姐",
+        "profile": "舞队成员，什么都要插一句",
+        "want": "站到第一排"
+      },
+      {
+        "name": "老周",
+        "profile": "轮滑班家长，自认讲道理，带着一张物业通知",
+        "want": "让孩子们练完今天的课"
+      },
+      {
+        "name": "小保安",
+        "profile": "物业新来的，十九岁，谁也不敢得罪",
+        "want": "两边别吵，别投诉到他头上"
+      }
+    ],
+    "scene_goal": "广场今晚怎么分",
+    "conflict": "两边都拿着物业发的通知，时间写重叠了",
+    "beats": [
+      "王阿姨摆好音箱，发现场地被占",
+      "老周拿出通知，王阿姨也拿出一张",
+      "马大姐不停插话，越帮越乱",
+      "小保安提出一人一半，两边都不满意，最后跳舞的跟着轮滑的节奏跳了起来"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "音箱",
+      "物业通知"
+    ]
+  },
+  "target": {
+    "duration_sec": 120,
+    "format": "角色名：台词；（动作线）"
+  }
+}

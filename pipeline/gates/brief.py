@@ -101,8 +101,41 @@ def check_brief(brief: dict, line: str) -> list[dict]:
     return hits
 
 
+_STYLE_FILE = __import__("pathlib").Path(__file__).resolve().parents[1] / "data" / "风格指令.json"
+
+
+def style_directives(brief: dict) -> list[dict]:
+    """brief 里的风格指令（“要短”“制造紧张感”……）只提示，不退回。和线无关，任何文体都适用。
+
+    这些词会被模型照字面执行（“短”写成“断”）。brief 只写场景：谁、对谁、为什么开口、想达到什么。
+    """
+    try:
+        phrases = json.loads(_STYLE_FILE.read_text(encoding="utf-8"))["phrases"]
+    except (OSError, KeyError, ValueError):
+        return []
+    found: dict[str, str] = {}
+
+    def walk(v, path):
+        if isinstance(v, str):
+            for p in sorted(phrases, key=len, reverse=True):   # 长的先匹配：有“不煽情”就不再单报“煽情”
+                if p in v and p not in found and not any(p in q for q in found):
+                    found[p] = path
+        elif isinstance(v, dict):
+            for k, x in v.items():
+                if k not in ("source", "id", "line", "status") and not k.startswith("_"):
+                    walk(x, f"{path}.{k}" if path else k)
+        elif isinstance(v, list):
+            for i, x in enumerate(v):
+                walk(x, f"{path}[{i}]")
+
+    walk(brief, "")
+    return [hit("s0.style_directive",
+                f"{path} 里有风格指令“{p}”：brief 只写场景（谁、对谁、为什么开口、想达到什么），风格交给 skill 和评测",
+                severity="warn", field=path, excerpt=p) for p, path in found.items()]
+
+
 def run(ctx: dict) -> dict:
-    hits = check_brief(ctx["brief"], ctx["line"])
+    hits = check_brief(ctx["brief"], ctx["line"]) + style_directives(ctx["brief"])
     blocking = [h for h in hits if h["severity"] == "block"]
     return result("S0", "hard", "fail" if blocking else "pass", None, hits,
                   {"missing": len(blocking), "warnings": len(hits) - len(blocking)})

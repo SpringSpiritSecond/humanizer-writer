@@ -1,0 +1,368 @@
+{
+ "_说明": "第三轮（Ada 先审）：不用 Kimi。skill 的完整组合（不加 / 1 个 / 2 个 / 3 个 / 换顺序 / 换位置 / 先规划后写）只在 Gemini 4 Argon 上跑；GLM-5.2 和 Claude Opus 5.5 各跑 3 个关键组合，用来比模型。Claude 由干净的子代理按同样的提示词生成。每条线 2 个 brief。",
+ "models": {
+  "gemini": {
+   "model": "gemini-4-argon",
+   "vendor": "google",
+   "api_key_env": "RELAYROUTER_API_KEY"
+  },
+  "glm": {
+   "model": "glm-5.2",
+   "vendor": "zhipu",
+   "api_key_env": "RELAYROUTER_GLM_API_KEY"
+  },
+  "claude": {
+   "model": "claude-opus-5-5",
+   "vendor": "anthropic",
+   "external": true
+  }
+ },
+ "defaults": {
+  "base_url_env": "RELAYROUTER_BASE_URL",
+  "temperature": 1.0,
+  "max_tokens": 6000,
+  "reasoning_effort": "low",
+  "timeout": 300
+ },
+ "arms": {
+  "台词": [
+   {
+    "id": "gemini·无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "gemini·1 个：speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·1 个：活人感",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·1 个：stop-slop",
+    "model": "gemini",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·2 个：活人感 → speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·2 个：speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·3 个：speak-to-someone → 活人感 → stop-slop",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch",
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·2 个，放在用户消息里：speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ],
+    "placement": "user"
+   },
+   {
+    "id": "gemini·先规划后写：speak-to-someone 规划，活人感 写",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ],
+    "mode": "plan_then_write",
+    "plan_skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·无 skill",
+    "model": "glm",
+    "skills": []
+   },
+   {
+    "id": "glm·1 个：speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·2 个：活人感 → speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "claude·无 skill",
+    "model": "claude",
+    "skills": []
+   },
+   {
+    "id": "claude·1 个：speak-to-someone",
+    "model": "claude",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "claude·2 个：活人感 → speak-to-someone",
+    "model": "claude",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   }
+  ],
+  "科普": [
+   {
+    "id": "gemini·无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "gemini·1 个：speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·1 个：活人感",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·1 个：stop-slop",
+    "model": "gemini",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·2 个：活人感 → speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·2 个：speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·3 个：speak-to-someone → 活人感 → stop-slop",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch",
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·2 个，放在用户消息里：speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ],
+    "placement": "user"
+   },
+   {
+    "id": "gemini·先规划后写：speak-to-someone 规划，活人感 写",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ],
+    "mode": "plan_then_write",
+    "plan_skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·无 skill",
+    "model": "glm",
+    "skills": []
+   },
+   {
+    "id": "glm·1 个：speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·2 个：活人感 → speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "claude·无 skill",
+    "model": "claude",
+    "skills": []
+   },
+   {
+    "id": "claude·1 个：speak-to-someone",
+    "model": "claude",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "claude·2 个：活人感 → speak-to-someone",
+    "model": "claude",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   }
+  ],
+  "训练": [
+   {
+    "id": "gemini·无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "gemini·1 个：speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·1 个：活人感",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·1 个：stop-slop",
+    "model": "gemini",
+    "skills": [
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·2 个：活人感 → speak-to-someone",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "gemini·2 个：speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ]
+   },
+   {
+    "id": "gemini·3 个：speak-to-someone → 活人感 → stop-slop",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch",
+     "stop-slop-zh"
+    ]
+   },
+   {
+    "id": "gemini·2 个，放在用户消息里：speak-to-someone → 活人感",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone",
+     "human-writing-batch"
+    ],
+    "placement": "user"
+   },
+   {
+    "id": "gemini·先规划后写：speak-to-someone 规划，活人感 写",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch"
+    ],
+    "mode": "plan_then_write",
+    "plan_skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·无 skill",
+    "model": "glm",
+    "skills": []
+   },
+   {
+    "id": "glm·1 个：speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "glm·2 个：活人感 → speak-to-someone",
+    "model": "glm",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "claude·无 skill",
+    "model": "claude",
+    "skills": []
+   },
+   {
+    "id": "claude·1 个：speak-to-someone",
+    "model": "claude",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "claude·2 个：活人感 → speak-to-someone",
+    "model": "claude",
+    "skills": [
+     "human-writing-batch",
+     "speak-to-someone"
+    ]
+   }
+  ]
+ }
+}

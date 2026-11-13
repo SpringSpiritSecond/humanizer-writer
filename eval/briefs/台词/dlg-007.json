@@ -1,0 +1,53 @@
+{
+  "id": "dlg-007",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "山里民宿停电了一个小时。来电后，住客卢川发现放在房间里的护照不见了。",
+    "location_time": "山间民宿前台，雨夜十一点",
+    "characters": [
+      {
+        "name": "卢川",
+        "profile": "出差的工程师，说话直，越急越大声",
+        "want": "找回护照，明早要赶飞机"
+      },
+      {
+        "name": "温姐",
+        "profile": "民宿老板娘，热情但会回避问题",
+        "want": "别报警，民宿刚拿到证"
+      },
+      {
+        "name": "阿森",
+        "profile": "前台小伙，本地人，停电时说自己去检查了电闸",
+        "want": "不被怀疑"
+      }
+    ],
+    "scene_goal": "找出停电那一小时里谁进过卢川的房间",
+    "conflict": "卢川坚持要看监控，温姐说停电时监控没录；阿森的说法和时间对不上",
+    "beats": [
+      "卢川冲到前台要求看监控",
+      "温姐拿不出录像，劝他再找找",
+      "卢川发现阿森鞋上有泥，阿森说是去电闸那边踩的",
+      "温姐承认停电是她自己拉的闸，护照在保险柜里"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "护照",
+      "电闸",
+      "保险柜"
+    ]
+  },
+  "target": {
+    "duration_sec": 180,
+    "format": "角色名：台词；（动作线）"
+  }
+}

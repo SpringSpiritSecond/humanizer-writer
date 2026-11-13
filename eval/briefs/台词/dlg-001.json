@@ -1,0 +1,47 @@
+{
+  "id": "dlg-001",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "罗晓棠和周屿合租两年，上个月分手，周屿先搬走了。今天退租，房东下午来验房。",
+    "location_time": "老小区两居室，周六上午，屋里堆着纸箱",
+    "characters": [
+      {
+        "name": "罗晓棠",
+        "profile": "做会计，说话利落，紧张时爱收拾东西",
+        "want": "把押金按约定一人一半分清，今天就了结"
+      },
+      {
+        "name": "周屿",
+        "profile": "做后期剪辑，说话拖、爱开玩笑岔开话题",
+        "want": "拿回那台两人合买的投影仪，顺便看她过得怎么样"
+      }
+    ],
+    "scene_goal": "两人把共同物品分完，各自离开",
+    "conflict": "投影仪是两人各出一半买的，晓棠想折现给周屿，周屿坚持要拿走实物，因为上面存着两人的旅行视频",
+    "beats": [
+      "周屿进门，两人客气地打招呼",
+      "清点物品时为投影仪僵住",
+      "晓棠发现周屿要的其实是里面的视频",
+      "晓棠把投影仪给了他，自己留下遥控器"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "投影仪",
+      "押金条"
+    ]
+  },
+  "target": {
+    "duration_sec": 120,
+    "format": "角色名：台词；（动作线）"
+  }
+}

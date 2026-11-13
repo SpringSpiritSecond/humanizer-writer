@@ -1,0 +1,157 @@
+{
+ "_说明": "第四轮（Ada 先审）：只用 Gemini 4 Argon，每条线 1 个 brief，每个组合写 2 份。验证第三轮之后的通用改动：brief 只写事实和场景、不能出现的内容不给写稿模型看、新的通用 skill scene-anchored。第一个组合用上一版 brief 做对照。",
+ "models": {
+  "gemini": {
+   "model": "gemini-4-argon",
+   "vendor": "google",
+   "api_key_env": "RELAYROUTER_API_KEY"
+  }
+ },
+ "defaults": {
+  "base_url_env": "RELAYROUTER_BASE_URL",
+  "temperature": 1.0,
+  "max_tokens": 6000,
+  "reasoning_effort": "low",
+  "timeout": 300
+ },
+ "arms": {
+  "台词": [
+   {
+    "id": "无 skill · 上一版 brief",
+    "model": "gemini",
+    "skills": [],
+    "briefs": "eval/briefs/bbtt-v2"
+   },
+   {
+    "id": "无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "speak-to-someone（上一版通用 skill）",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "scene-anchored（新通用 skill）",
+    "model": "gemini",
+    "skills": [
+     "scene-anchored"
+    ]
+   },
+   {
+    "id": "活人感 → scene-anchored",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "scene-anchored"
+    ]
+   },
+   {
+    "id": "先规划后写：都用 scene-anchored",
+    "model": "gemini",
+    "skills": [
+     "scene-anchored"
+    ],
+    "mode": "plan_then_write",
+    "plan_skills": [
+     "scene-anchored"
+    ]
+   }
+  ],
+  "科普": [
+   {
+    "id": "无 skill · 上一版 brief",
+    "model": "gemini",
+    "skills": [],
+    "briefs": "eval/briefs/bbtt-v2"
+   },
+   {
+    "id": "无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "speak-to-someone（上一版通用 skill）",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "scene-anchored（新通用 skill）",
+    "model": "gemini",
+    "skills": [
+     "scene-anchored"
+    ]
+   },
+   {
+    "id": "活人感 → scene-anchored",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "scene-anchored"
+    ]
+   },
+   {
+    "id": "先规划后写：都用 scene-anchored",
+    "model": "gemini",
+    "skills": [
+     "scene-anchored"
+    ],
+    "mode": "plan_then_write",
+    "plan_skills": [
+     "scene-anchored"
+    ]
+   }
+  ],
+  "训练": [
+   {
+    "id": "无 skill · 上一版 brief",
+    "model": "gemini",
+    "skills": [],
+    "briefs": "eval/briefs/bbtt-v2"
+   },
+   {
+    "id": "无 skill",
+    "model": "gemini",
+    "skills": []
+   },
+   {
+    "id": "speak-to-someone（上一版通用 skill）",
+    "model": "gemini",
+    "skills": [
+     "speak-to-someone"
+    ]
+   },
+   {
+    "id": "scene-anchored（新通用 skill）",
+    "model": "gemini",
+    "skills": [
+     "scene-anchored"
+    ]
+   },
+   {
+    "id": "活人感 → scene-anchored",
+    "model": "gemini",
+    "skills": [
+     "human-writing-batch",
+     "scene-anchored"
+    ]
+   },
+   {
+    "id": "先规划后写：都用 scene-anchored",
+    "model": "gemini",
+    "skills": [
+     "scene-anchored"
+    ],
+    "mode": "plan_then_write",
+    "plan_skills": [
+     "scene-anchored"
+    ]
+   }
+  ]
+ }
+}

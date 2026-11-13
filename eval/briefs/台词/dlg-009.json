@@ -1,0 +1,53 @@
+{
+  "id": "dlg-009",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "边关急报要送往州府，官差在路上丢了驿站换马用的文书。",
+    "location_time": "官道旁的驿站，傍晚，马厩里只剩两匹马",
+    "characters": [
+      {
+        "name": "赵驿丞",
+        "profile": "驿站掌柜，守规矩，说话客气但不松口",
+        "want": "没有文书就不给马，免得被上头追责"
+      },
+      {
+        "name": "韩校尉",
+        "profile": "送急报的官差，脾气急，嗓门大",
+        "want": "立刻换马，天黑前赶到下一站"
+      },
+      {
+        "name": "小六",
+        "profile": "驿站马夫，十几岁，认得韩校尉的马",
+        "want": "不想看两人动手"
+      }
+    ],
+    "scene_goal": "韩校尉要拿到马",
+    "conflict": "规矩要文书，急报不等人；韩校尉要拔刀，赵驿丞宁可挨打也不破例",
+    "beats": [
+      "韩校尉进门要马",
+      "赵驿丞要文书，韩校尉拿不出",
+      "两人僵持，韩校尉手按刀柄",
+      "小六认出急报上的火漆，提醒赵驿丞可以先登记后补文书"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "火漆",
+      "急报",
+      "文书"
+    ]
+  },
+  "target": {
+    "duration_sec": 120,
+    "format": "角色名：台词；（动作线）"
+  }
+}

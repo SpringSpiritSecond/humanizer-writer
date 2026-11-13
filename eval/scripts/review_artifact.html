@@ -1,0 +1,179 @@
+<title>BBTT 文案盲审</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 布局：顶部一条工作栏（场景切换 + 称呼 + 保存状态），下面是 brief 卡片和稿子网格。像审稿桌：纸色底、墨色字、一种松绿做强调。 */
+:root{
+  --bg:#f5f3ee; --paper:#fffdf8; --ink:#25231f; --mute:#736d64; --line:#e2ddd3;
+  --acc:#2c6b58; --acc-ink:#ffffff; --acc-soft:#e1eee8; --warn:#a4502a;
+  --f-text:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --f-head:"Noto Serif SC","Songti SC",serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1a1917; --paper:#23211e; --ink:#ebe7df; --mute:#a29b90; --line:#3a3631;
+  --acc:#7fc2a9; --acc-ink:#10201a; --acc-soft:#22352d; --warn:#e3a07c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a1917; --paper:#23211e; --ink:#ebe7df; --mute:#a29b90; --line:#3a3631;
+  --acc:#7fc2a9; --acc-ink:#10201a; --acc-soft:#22352d; --warn:#e3a07c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.7 var(--f-text);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+  padding-block:10px;display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}
+h1{font:600 17px/1.3 var(--f-head);margin:0;letter-spacing:.02em}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav button,.scale button,.tags button{font:inherit;cursor:pointer;color:var(--ink);background:transparent;border:1px solid var(--line)}
+nav button{border-radius:6px;padding:2px 10px;font-size:13px}
+nav button[aria-current="true"]{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+nav button.done::after{content:" ✓"}
+.who{margin-left:auto;font-size:13px;color:var(--mute);display:flex;gap:6px;align-items:center}
+.who input{width:7.5em;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#status{font-size:13px;color:var(--mute);min-width:6em}
+#status.err{color:var(--warn)}
+main{max-width:1200px;margin:0 auto;padding-block:16px 40px;display:flex;flex-direction:column;gap:14px}
+.intro{font-size:13.5px;color:var(--mute);max-width:70ch;margin:0}
+.notice{background:var(--paper);border:1px solid var(--warn);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:14px}
+.brief{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:14px}
+.brief dl{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:3px 12px;margin:0}
+.brief dt{color:var(--mute)}
+.brief dd{margin:0;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.v{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.v.complete{border-color:var(--acc)}
+.v h3{margin:0;font:600 14px/1.4 var(--f-head);display:flex;justify-content:space-between;gap:8px}
+.v h3 span{color:var(--mute);font:400 12px var(--f-text);font-variant-numeric:tabular-nums}
+.txt{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.85;border-left:3px solid var(--line);padding-left:10px;margin-bottom:4px}
+.q{font-size:13px;color:var(--mute)}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.scale button{border-radius:6px;padding:2px 0;font-size:13px;font-variant-numeric:tabular-nums}
+.scale button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.ends{display:flex;justify-content:space-between;font-size:11px;color:var(--mute);margin-top:-3px}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tags button{border-radius:20px;padding:0 9px;font-size:12px}
+.tags button[aria-pressed="true"]{background:var(--acc-soft);border-color:var(--acc);color:var(--acc)}
+textarea{width:100%;min-height:50px;font:inherit;font-size:13px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:6px}
+.best{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.best select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+.pager{display:flex;justify-content:flex-end}
+.pager button{font:inherit;cursor:pointer;background:var(--acc);color:var(--acc-ink);border:0;border-radius:8px;padding:6px 16px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+@media (max-width:420px){.grid{grid-template-columns:minmax(0,1fr)}.who{margin-left:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <h1>BBTT 文案盲审</h1>
+  <nav id="nav" aria-label="选择场景"></nav>
+  <label class="who" for="name">称呼 <input id="name" placeholder="可不填" maxlength="40"></label>
+  <span id="status" role="status">载入中…</span>
+</header>
+<main id="main">
+  <p class="intro">稿子都不标出处，顺序每个人都不一样。每份回答两题：像不像 AI 写的、写得好不好；标签和备注可选。评几份都行，随时可以停，下次打开接着评。</p>
+</main>
+
+<script type="application/json" id="blind">__BLIND_JSON__</script>
+<script>
+(function(){
+const DATA = JSON.parse(document.getElementById("blind").textContent);
+const COMMON = ["说给旁观者听","靠标点撑情绪","碎句","没头没尾","像在念稿","套话","说教","太书面","编出来的细节","事实/设定不对"];
+const TAGS = {"台词":[...COMMON,"角色说话一个样","孩子听不懂"],"科普":[...COMMON,"承诺效果"],"训练":[...COMMON,"孩子跟不上","和动作对不上","左右说反"],"口播":[...COMMON,"承诺效果"]};
+const QS = [["ai","像不像 AI 写的？","肯定是人写的","肯定是 AI"],["good","写得好不好？","不能用","可以直接用"]];
+const $ = s => document.querySelector(s);
+const main = $("#main"), status = $("#status");
+let R = {}, NAME = "", cur = 0, ref = null, uid = "local", timer = null, saving = false, dirty = false, canSave = false;
+
+function setStatus(t, err){ status.textContent = t; status.classList.toggle("err", !!err); }
+function seeded(str){ let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++){ h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; }
+  return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; }; }
+function order(b){ const r = seeded(uid + "|" + b.id), a = b.items.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function rec(bid, vid){ R[bid] = R[bid] || {items:{}}; R[bid].items = R[bid].items || {}; return R[bid].items[vid] = R[bid].items[vid] || {ai:null,talk:null,good:null,tags:[],note:""}; }
+const full = r => r && r.ai && r.good;
+const doneB = b => b.items.every(it => full((R[b.id] || {items:{}}).items?.[it.vid]));
+function el(tag, attrs, ...kids){ const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs || {})){ if (k === "class") e.className = v; else if (k.startsWith("data-")) e.setAttribute(k, v); else if (k in e) e[k] = v; else e.setAttribute(k, v); }
+  for (const k of kids) if (k != null) e.append(k.nodeType ? k : document.createTextNode(String(k))); return e; }
+
+function briefRows(b){ const x = b.brief || {}; const rows = [];
+  const add = (k, v) => { if (v && (!Array.isArray(v) || v.length)) rows.push([k, v]); };
+  if (b.line === "台词"){ const s = x.scene_card || {};
+    add("背景", x.context); add("前情", s.previously); add("场景", s.location_time);
+    add("人物", (s.characters || []).map(c => `${c.name}：${c.profile}；想要：${c.want}`));
+    add("目标", s.scene_goal); add("冲突", s.conflict); add("beat", (s.beats || []).join(" → ")); add("时长", x.target?.duration_sec ? x.target.duration_sec + " 秒" : "");
+  } else if (b.line === "训练"){ const d = x.dose || {};
+    add("背景", x.context); add("动作", x.topic); add("讲述者", x.speaker); add("当时情况", x.situation);
+    add("节拍", [d.bpm ? d.bpm + " BPM" : "", d.beats ? d.beats + " 拍" : ""].filter(Boolean).join("，")); add("时间轴", d.timeline || []);
+    add("画面提示", (x.screen_cues || []).join("；")); add("不能写", (x.must_not || []).join("；"));
+  } else { add("主题", x.topic); add("受众", x.audience); add("事实", (x.facts || []).map(f => `${f.field}：${f.value}`));
+    add("不能写", (x.must_not || []).join("；")); add("讲述者", x.speaker); add("时长", x.target?.duration_sec ? x.target.duration_sec + " 秒" : ""); }
+  return rows; }
+
+function renderNav(){ const nav = $("#nav"); nav.textContent = ""; const cnt = {};
+  DATA.briefs.forEach((b, i) => { cnt[b.line] = (cnt[b.line] || 0) + 1;
+    const btn = el("button", {type:"button", class: doneB(b) ? "done" : "", "data-i": i}, `${b.line} ${cnt[b.line]}`);
+    btn.setAttribute("aria-current", i === cur ? "true" : "false"); nav.append(btn); }); }
+
+function render(){
+  renderNav(); const b = DATA.briefs[cur]; const items = order(b);
+  [...main.querySelectorAll(".brief,.grid,.best,.pager")].forEach(n => n.remove());
+  const dl = el("dl"); for (const [k, v] of briefRows(b)){ const dd = el("dd"); (Array.isArray(v) ? v : [v]).forEach((line, i) => { if (i) dd.append(el("br")); dd.append(line); }); dl.append(el("dt", {}, k), dd); }
+  main.append(el("section", {class:"brief", "aria-label":"brief"}, dl));
+  const grid = el("div", {class:"grid"});
+  items.forEach((it, k) => { const r = (R[b.id]?.items || {})[it.vid] || {};
+    const card = el("article", {class: "v" + (full(r) ? " complete" : ""), "data-v": it.vid});
+    card.append(el("h3", {}, `稿 ${k + 1}`, el("span", {}, `${it.text.length} 字`)), el("div", {class:"txt"}, it.text));
+    for (const [key, q, lo, hi] of QS){ const sc = el("div", {class:"scale", "data-k": key, role:"group", "aria-label": q});
+      for (let n = 1; n <= 5; n++){ const bt = el("button", {type:"button", "data-n": n}, n); bt.setAttribute("aria-pressed", r[key] === n ? "true" : "false"); sc.append(bt); }
+      card.append(el("div", {class:"q"}, q), sc, el("div", {class:"ends"}, el("span", {}, lo), el("span", {}, hi))); }
+    const tg = el("div", {class:"tags"}); for (const t of TAGS[b.line] || COMMON){ const bt = el("button", {type:"button"}, t); bt.setAttribute("aria-pressed", (r.tags || []).includes(t) ? "true" : "false"); tg.append(bt); }
+    const ta = el("textarea", {id: "note-" + it.vid, placeholder: "备注：哪句好、哪句不对"}); ta.value = r.note || "";
+    card.append(tg, ta); grid.append(card); });
+  main.append(grid);
+  const sel = el("select", {id:"best"}); sel.append(el("option", {value:""}, "（未选）"));
+  items.forEach((it, k) => { const o = el("option", {value: it.vid}, `稿 ${k + 1}`); if ((R[b.id] || {}).best === it.vid) o.selected = true; sel.append(o); });
+  main.append(el("div", {class:"best"}, el("label", {for:"best"}, "这一组里最好的是："), sel));
+  if (cur < DATA.briefs.length - 1) main.append(el("div", {class:"pager"}, el("button", {type:"button", id:"next"}, "下一组 →")));
+}
+
+function refreshCard(card){ const b = DATA.briefs[cur]; const r = (R[b.id]?.items || {})[card.dataset.v] || {};
+  card.classList.toggle("complete", !!full(r));
+  card.querySelectorAll(".scale").forEach(sc => sc.querySelectorAll("button").forEach(bt => bt.setAttribute("aria-pressed", r[sc.dataset.k] === +bt.dataset.n ? "true" : "false")));
+  card.querySelectorAll(".tags button").forEach(bt => bt.setAttribute("aria-pressed", (r.tags || []).includes(bt.textContent) ? "true" : "false"));
+  renderNav(); }
+
+function save(){ dirty = true; if (!canSave){ setStatus("只存在这个浏览器里"); try { localStorage.setItem("bbtt-blind-draft", JSON.stringify({name: NAME, data: R})); } catch(e){} return; }
+  setStatus("保存中…"); clearTimeout(timer); timer = setTimeout(flush, 600); }
+async function flush(){ if (saving || !dirty) return; saving = true; dirty = false;
+  try { await ref.set({name: NAME, data: R, updated: Date.now()}); setStatus("已保存 " + new Date().toLocaleTimeString().slice(0, 5)); }
+  catch(e){ dirty = true; setStatus("保存失败，稍后会再试", true); }
+  finally { saving = false; if (dirty) timer = setTimeout(flush, 3000); } }
+
+document.addEventListener("click", e => {
+  const nb = e.target.closest("nav button"); if (nb){ cur = +nb.dataset.i; render(); scrollTo(0, 0); return; }
+  if (e.target.id === "next"){ cur = Math.min(cur + 1, DATA.briefs.length - 1); render(); scrollTo(0, 0); return; }
+  const card = e.target.closest(".v"); if (!card) return; const b = DATA.briefs[cur]; const r = rec(b.id, card.dataset.v);
+  const sb = e.target.closest(".scale button"); if (sb){ const k = sb.parentNode.dataset.k, n = +sb.dataset.n; r[k] = r[k] === n ? null : n; save(); refreshCard(card); return; }
+  const tb = e.target.closest(".tags button"); if (tb){ const t = tb.textContent; r.tags = r.tags.includes(t) ? r.tags.filter(x => x !== t) : [...r.tags, t]; save(); refreshCard(card); }
+});
+document.addEventListener("input", e => { const b = DATA.briefs[cur];
+  if (e.target.id === "name"){ NAME = e.target.value.slice(0, 40); save(); return; }
+  if (e.target.id === "best"){ R[b.id] = R[b.id] || {items:{}}; R[b.id].best = e.target.value; save(); return; }
+  if (e.target.matches("textarea")){ rec(b.id, e.target.closest(".v").dataset.v).note = e.target.value.slice(0, 500); save(); }
+});
+
+render(); setStatus("连接中…");
+
+(async () => {
+  const fail = msg => { const n = el("p", {class:"notice"}, msg); main.insertBefore(n, main.children[1] || null);
+    try { const d = JSON.parse(localStorage.getItem("bbtt-blind-draft") || "null"); if (d){ R = d.data || {}; NAME = d.name || ""; $("#name").value = NAME; render(); } } catch(e){}
+    setStatus("只存在这个浏览器里"); };
+  const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+  const id = user ? await user.id() : null;
+  if (!db || !id){ fail("现在评的分只存在这个浏览器里，交不上去。要提交评分，请登录 claude.ai，并请分享这个页面的人给你“可以互动”的权限。"); return; }
+  uid = id; ref = db.doc("ratings/" + id);
+  let settled = false; const t = setTimeout(() => { if (!settled){ settled = true; fail("读不到之前的评分，可能是网络问题。刷新一下再试。"); } }, 10000);
+  try { const snap = await ref.get(); if (settled) return; settled = true; clearTimeout(t);
+    if (snap.exists){ const d = snap.data() || {}; R = d.data || {}; NAME = d.name || ""; $("#name").value = NAME; }
+    canSave = true; render(); setStatus("已连接");
+  } catch(e){ if (!settled){ settled = true; clearTimeout(t); fail("没有提交评分的权限。请分享这个页面的人给你“可以互动”的权限。"); } }
+})();
+})();
+</script>

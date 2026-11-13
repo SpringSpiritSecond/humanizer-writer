@@ -1,0 +1,31 @@
+{
+  "_说明": "BBTT 样稿：只写稿、不改稿，每个参赛组合用一个模型。skills 按列表顺序拼进 system prompt。给 Ada 直接审阅用，不是盲审。",
+  "models": {
+    "kimi":   {"model": "kimi-k3",        "vendor": "moonshot", "api_key_env": "RELAYROUTER_KIMI_API_KEY"},
+    "glm":    {"model": "glm-5.2",        "vendor": "zhipu",    "api_key_env": "RELAYROUTER_GLM_API_KEY"},
+    "gemini": {"model": "gemini-4-argon", "vendor": "google",   "api_key_env": "RELAYROUTER_API_KEY"}
+  },
+  "defaults": {"base_url_env": "RELAYROUTER_BASE_URL", "temperature": 1.0, "max_tokens": 6000,
+               "reasoning_effort": "low", "timeout": 300},
+  "arms": {
+    "台词": [
+      {"id": "kimi·无 skill",              "model": "kimi",   "skills": []},
+      {"id": "kimi·一句话提示",            "model": "kimi",   "skills": ["baseline-oneline"]},
+      {"id": "kimi·活人感(批量版)",        "model": "kimi",   "skills": ["human-writing-batch"]},
+      {"id": "kimi·stop-slop 台词版",      "model": "kimi",   "skills": ["stop-slop-zh-taici"]},
+      {"id": "kimi·drama 台词规则",        "model": "kimi",   "skills": ["drama-skills-dialogue"]},
+      {"id": "kimi·drama → stop-slop 台词", "model": "kimi",  "skills": ["drama-skills-dialogue", "stop-slop-zh-taici"]},
+      {"id": "glm·无 skill",               "model": "glm",    "skills": []},
+      {"id": "gemini·无 skill",            "model": "gemini", "skills": []}
+    ],
+    "科普": [
+      {"id": "kimi·无 skill",              "model": "kimi",   "skills": []},
+      {"id": "kimi·一句话提示",            "model": "kimi",   "skills": ["baseline-oneline"]},
+      {"id": "kimi·活人感(批量版)",        "model": "kimi",   "skills": ["human-writing-batch"]},
+      {"id": "kimi·stop-slop 口播版",      "model": "kimi",   "skills": ["stop-slop-zh-koubo"]},
+      {"id": "kimi·活人感 → stop-slop",    "model": "kimi",   "skills": ["human-writing-batch", "stop-slop-zh-koubo"]},
+      {"id": "glm·无 skill",               "model": "glm",    "skills": []},
+      {"id": "gemini·无 skill",            "model": "gemini", "skills": []}
+    ]
+  }
+}

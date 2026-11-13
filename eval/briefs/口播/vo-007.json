@@ -1,0 +1,45 @@
+{
+  "id": "vo-007",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "B 站"
+  },
+  "facts": [
+    {
+      "field": "材质",
+      "value": "PBT 二色成型",
+      "must_match": true
+    },
+    {
+      "field": "数量",
+      "value": "全套 132 颗",
+      "must_match": true
+    },
+    {
+      "field": "价格",
+      "value": "199 元",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "拾音键帽",
+      "拾音“青瓷”配色"
+    ],
+    "cta": "评论区第一条有购买链接"
+  },
+  "must_not": [
+    "键研社"
+  ],
+  "audience": "玩机械键盘、喜欢换配色的人",
+  "speaker": "UP 主画外音，手部特写，慢慢讲，带一点个人喜好",
+  "target": {
+    "duration_sec": 120,
+    "chars_per_min": ""
+  }
+}

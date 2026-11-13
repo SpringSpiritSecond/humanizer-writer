@@ -1,0 +1,47 @@
+{
+  "id": "dlg-010",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "城里最大的绣坊接了一笔官府的订单，徒弟却在这时提出要离开。",
+    "location_time": "绣坊后院，深夜，绣架上是没完工的屏风",
+    "characters": [
+      {
+        "name": "柳师傅",
+        "profile": "绣坊主人，五十岁，带了十几个徒弟，爱讲大道理",
+        "want": "留住徒弟做完这批官货"
+      },
+      {
+        "name": "阿蘅",
+        "profile": "大徒弟，手艺最好，话不多",
+        "want": "离开绣坊，到城南自己开铺子"
+      }
+    ],
+    "scene_goal": "阿蘅说出要走，师徒谈出结果",
+    "conflict": "官货交期只剩十天，没有阿蘅做不完；阿蘅已经租好铺面，定金不退",
+    "beats": [
+      "阿蘅交还绣坊的钥匙",
+      "柳师傅不接，先让她看屏风上没绣完的鹤",
+      "柳师傅提出条件：做完这批再走",
+      "阿蘅答应，但要把自己的名字绣进屏风角落"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "屏风",
+      "钥匙"
+    ]
+  },
+  "target": {
+    "duration_sec": 150,
+    "format": "角色名：台词；（动作线）"
+  }
+}

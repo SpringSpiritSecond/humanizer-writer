@@ -1,0 +1,52 @@
+{
+  "id": "dlg-006",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "广告公司下午三点要给客户提案，PPT 里的核心数据由实习生整理。",
+    "location_time": "公司茶水间，下午两点，窗外下雨",
+    "characters": [
+      {
+        "name": "唐瑶",
+        "profile": "项目负责人，语速快，压力大时会重复问题",
+        "want": "按时开会，不在客户面前丢人"
+      },
+      {
+        "name": "何子默",
+        "profile": "实习生，第一次独立做数据，紧张时说话结巴",
+        "want": "承认错误但别被赶走"
+      },
+      {
+        "name": "老孟",
+        "profile": "策划总监，见过很多场面，慢悠悠",
+        "want": "让提案照常进行"
+      }
+    ],
+    "scene_goal": "在一小时内决定数据错误怎么处理",
+    "conflict": "何子默把两年的用户数弄反了，改数据会让提案结论变弱，唐瑶想推迟会议，老孟不同意",
+    "beats": [
+      "何子默向唐瑶坦白数据错了",
+      "唐瑶要打电话给客户改时间",
+      "老孟拦下她，提议只改结论那一页",
+      "三人分头去改，何子默留下来核对其余数字"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "PPT",
+      "笔记本电脑"
+    ]
+  },
+  "target": {
+    "duration_sec": 150,
+    "format": "角色名：台词；（动作线）"
+  }
+}

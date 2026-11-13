@@ -1,0 +1,51 @@
+{
+  "id": "dlg-018",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "一位老人在公交站坐了一下午，被好心人送到派出所。",
+    "location_time": "派出所值班室，傍晚",
+    "characters": [
+      {
+        "name": "袁警官",
+        "profile": "年轻民警，耐心，会蹲下来跟人说话",
+        "want": "问出老人的家在哪"
+      },
+      {
+        "name": "宋奶奶",
+        "profile": "七十多岁，只记得自己姓宋，反复说要去接孙子放学",
+        "want": "去学校接孙子"
+      },
+      {
+        "name": "小崔",
+        "profile": "送她来的外卖员，二十出头，送完人想走又不放心",
+        "want": "确认老人有人管"
+      }
+    ],
+    "scene_goal": "找到老人家属的线索",
+    "conflict": "老人说的学校名字已经改名十年了，她坚持要马上去接人",
+    "beats": [
+      "小崔交代在哪儿发现老人",
+      "袁警官问家住哪，宋奶奶只说要接孙子",
+      "袁警官从宋奶奶的布包里找到一张写着电话的药盒"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "药盒",
+      "布包"
+    ]
+  },
+  "target": {
+    "duration_sec": 90,
+    "format": "角色名：台词；（动作线）"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "dlg-002",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "许嘉禾下周结婚。前男友顾恒托伴娘带来一个红包，伴娘没敢直接给。",
+    "location_time": "婚礼前一晚，酒店房间，桌上摊着喜糖盒",
+    "characters": [
+      {
+        "name": "许嘉禾",
+        "profile": "新娘，做中学语文老师，习惯把话说得很完整、爱讲道理",
+        "want": "收下红包不显得心虚，也不让未婚夫多想"
+      },
+      {
+        "name": "宋柠",
+        "profile": "伴娘，嘉禾大学室友，嘴快",
+        "want": "把红包的事交代清楚，别让自己背锅"
+      },
+      {
+        "name": "陈牧",
+        "profile": "新郎，程序员，话少，在门口听到了一半",
+        "want": "弄明白红包是谁送的"
+      }
+    ],
+    "scene_goal": "红包的来历摊开，三人决定怎么处理",
+    "conflict": "宋柠想偷偷把红包退回去，嘉禾觉得退回去反而像有事，陈牧进门撞见，问是谁送的",
+    "beats": [
+      "宋柠拿出红包，说明是顾恒托的",
+      "嘉禾和宋柠为退不退争起来",
+      "陈牧推门进来问红包",
+      "嘉禾当着陈牧的面拆开，里面只有一张旧电影票根"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "红包",
+      "电影票根"
+    ]
+  },
+  "target": {
+    "duration_sec": 150,
+    "format": "角色名：台词；（动作线）"
+  }
+}

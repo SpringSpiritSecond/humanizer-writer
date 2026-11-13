@@ -1,0 +1,52 @@
+{
+  "id": "dlg-013",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "高三月考前，班主任要求班长收齐全班的手机，有个同学没交。",
+    "location_time": "高中教室走廊，晚自习课间",
+    "characters": [
+      {
+        "name": "夏老师",
+        "profile": "班主任，严厉，说话不留余地",
+        "want": "今晚把手机收齐"
+      },
+      {
+        "name": "陆一鸣",
+        "profile": "班长，成绩好，不想得罪同学",
+        "want": "两头都别出事"
+      },
+      {
+        "name": "贺小舟",
+        "profile": "坐最后一排的男生，父亲在外地住院，每晚要等电话",
+        "want": "留着手机"
+      }
+    ],
+    "scene_goal": "陆一鸣决定怎么处理贺小舟的手机",
+    "conflict": "夏老师说收不齐就取消班长资格；贺小舟不肯说为什么要留手机",
+    "beats": [
+      "夏老师清点手机，发现少一部",
+      "陆一鸣找贺小舟，贺小舟不肯交",
+      "贺小舟的手机响了，他走到楼梯口接",
+      "陆一鸣回去跟夏老师说手机放他那儿，由他每晚保管"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "手机",
+      "收纳箱"
+    ]
+  },
+  "target": {
+    "duration_sec": 120,
+    "format": "角色名：台词；（动作线）"
+  }
+}

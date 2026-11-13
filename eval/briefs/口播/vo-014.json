@@ -1,0 +1,44 @@
+{
+  "id": "vo-014",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "视频号"
+  },
+  "facts": [
+    {
+      "field": "营业",
+      "value": "24 小时营业",
+      "must_match": true
+    },
+    {
+      "field": "价格",
+      "value": "月卡 199 元",
+      "must_match": true
+    },
+    {
+      "field": "面积",
+      "value": "800 平方米",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "铁橙健身"
+    ],
+    "cta": "点下方链接买体验卡"
+  },
+  "must_not": [
+    "力动健身"
+  ],
+  "audience": "下班晚、想就近健身的人",
+  "speaker": "店长真人出镜，在器械区讲，说话干脆",
+  "target": {
+    "duration_sec": 45,
+    "chars_per_min": ""
+  }
+}

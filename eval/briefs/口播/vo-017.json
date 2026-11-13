@@ -1,0 +1,44 @@
+{
+  "id": "vo-017",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "小红书"
+  },
+  "facts": [
+    {
+      "field": "价格",
+      "value": "基础功能免费",
+      "must_match": true
+    },
+    {
+      "field": "会员",
+      "value": "会员 6 元每月",
+      "must_match": true
+    },
+    {
+      "field": "功能",
+      "value": "拍小票自动记一笔",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "一页账"
+    ],
+    "cta": "应用商店搜一页账"
+  },
+  "must_not": [
+    "随手账本"
+  ],
+  "audience": "想记账但总坚持不下去的年轻人",
+  "speaker": "真人出镜，手机录屏加讲解，口吻像分享自己的习惯",
+  "target": {
+    "duration_sec": 60,
+    "chars_per_min": ""
+  }
+}

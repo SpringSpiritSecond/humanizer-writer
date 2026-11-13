@@ -20,3 +20,7 @@ python -m workbench serve
 ```
 
 评审页 http://127.0.0.1:8765/ ，管理页 http://127.0.0.1:8765/admin 。测试：`python -m pytest`。
+
+## 直接用
+
+当前推荐的写稿工作流：[writer/README.md](writer/README.md)，依据见 [docs/工作流-当前推荐.md](docs/工作流-当前推荐.md)。

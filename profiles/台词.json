@@ -13,9 +13,9 @@
   },
   "exceptions": [
     { "id": "dash_interrupt", "desc": "破折号表示被打断或话没说完" },
+    { "id": "short_fragment", "desc": "S2 句式规则不在短句、单字回应里找设问之类的毛病（“去哪？回家。”是正常对话）。碎句太多由 G3 的 fragment_ratio 单独计量，不受这条例外影响" },
     { "id": "unfinished_line", "desc": "话说一半、省略、不成句" },
     { "id": "catchphrase_repeat", "desc": "角色口头禅重复，不算同义词轮换问题" },
-    { "id": "short_fragment", "desc": "短句、单字回应" },
     { "id": "children_screen_recap", "desc": "儿童内容里复述画面的台词保留（brief.source.is_children_content 为 true 时生效）" },
     { "id": "action_line_adverbs", "desc": "动作线里的 缓缓 / 微微 只作提示，不强制改" },
     { "id": "first_episode", "desc": "第一次 / 第一集 不算极限词" }

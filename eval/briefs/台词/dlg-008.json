@@ -1,0 +1,46 @@
+{
+  "id": "dlg-008",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "旧书店店主收了一批旧书，在一本书里翻到一张二十年前的借条。",
+    "location_time": "巷子里的旧书店，下午，店里没别的客人",
+    "characters": [
+      {
+        "name": "钱叔",
+        "profile": "书店老板，六十岁，慢条斯理，记性好",
+        "want": "弄清借条上的人还在不在"
+      },
+      {
+        "name": "苏禾",
+        "profile": "来卖这批旧书的年轻女人，说是替去世的父亲整理遗物",
+        "want": "尽快拿到书款离开"
+      }
+    ],
+    "scene_goal": "钱叔试探出苏禾和借条的关系",
+    "conflict": "借条上的欠款人和苏禾同姓，苏禾却说不认识；钱叔想留下她，她想马上走",
+    "beats": [
+      "钱叔慢慢算书款，提起书里夹了东西",
+      "苏禾看到借条，说不知道",
+      "钱叔说出借条上写的旧地址，苏禾停下了脚步"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "借条",
+      "旧书"
+    ]
+  },
+  "target": {
+    "duration_sec": 90,
+    "format": "角色名：台词；（动作线）"
+  }
+}

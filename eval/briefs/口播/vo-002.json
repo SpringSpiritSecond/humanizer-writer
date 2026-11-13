@@ -1,0 +1,50 @@
+{
+  "id": "vo-002",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "视频号"
+  },
+  "facts": [
+    {
+      "field": "开坊年份",
+      "value": "1998 年开坊",
+      "must_match": true
+    },
+    {
+      "field": "产地",
+      "value": "湖南浏阳",
+      "must_match": true
+    },
+    {
+      "field": "价格",
+      "value": "3 罐 59 元",
+      "must_match": true
+    },
+    {
+      "field": "规格",
+      "value": "每罐 280 克",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "禾丰坊",
+      "禾丰坊剁辣椒"
+    ],
+    "cta": "点下方链接下单"
+  },
+  "must_not": [
+    "湘味嫂"
+  ],
+  "audience": "四十岁以上、习惯自己做饭的人",
+  "speaker": "画外音，作坊老板本人讲，带一点方言口音，慢",
+  "target": {
+    "duration_sec": 60,
+    "chars_per_min": ""
+  }
+}

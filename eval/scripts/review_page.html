@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文案盲审</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#22201c;--mute:#77716a;--line:#e3ded5;--acc:#2f6b5a;--acc-soft:#e3efe9;--warn:#a5532c}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1a18;--card:#252320;--ink:#ece8e1;--mute:#a39d94;--line:#3a3733;--acc:#7cc0a8;--acc-soft:#26362f;--warn:#e09a76}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header h1{font-size:16px;margin:0}
+#saved{color:var(--mute);font-size:13px}
+.who{margin-left:auto;font-size:13px;color:var(--mute)}
+.who input{width:7em;font:inherit;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);padding:1px 6px}
+.count{color:var(--mute);font-size:11px}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:13px}
+nav button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+nav button.done::after{content:" ✓"}
+main{max-width:1180px;margin:0 auto;padding:16px}
+.brief{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:14px}
+.brief dl{display:grid;grid-template-columns:5.5em 1fr;gap:2px 10px;margin:0}
+.brief dt{color:var(--mute)}
+.brief dd{margin:0}
+.hint{color:var(--mute);font-size:13px;margin:-6px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.v{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.v h3{margin:0;font-size:14px;display:flex;justify-content:space-between}
+.v h3 span{color:var(--mute);font-weight:400;font-size:12px}
+.txt{white-space:pre-wrap;font-size:15px;line-height:1.85;border-left:3px solid var(--line);padding-left:10px}
+.q{font-size:13px;color:var(--mute)}
+.scale{display:flex;gap:4px}
+.scale button{flex:1;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:6px;padding:2px 0;cursor:pointer;font-size:13px}
+.scale button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.ends{display:flex;justify-content:space-between;font-size:11px;color:var(--mute);margin-top:-4px}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tags button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:20px;padding:0 9px;font-size:12px;cursor:pointer}
+.tags button.on{background:var(--acc-soft);border-color:var(--acc);color:var(--acc)}
+textarea{width:100%;min-height:52px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);font:inherit;font-size:13px;padding:6px}
+.best{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.best select{font:inherit;padding:2px 6px;margin-left:6px}
+@media (max-width:420px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>文案盲审</h1><nav id="nav"></nav><label class="who">称呼 <input id="name" placeholder="可不填" maxlength="40"></label><span id="saved">载入中…</span></header>
+<main id="main"></main>
+<script>
+const COMMON=["说给旁观者听","靠标点撑情绪","碎句","没头没尾","像在念稿","套话","说教","太书面","编出来的细节","事实/设定不对"];
+const TAGS={"台词":[...COMMON,"角色说话一个样","孩子听不懂"],"科普":[...COMMON,"承诺效果"],"口播":[...COMMON,"承诺效果"],"训练":[...COMMON,"孩子跟不上","和动作对不上","左右说反"]};
+let data, R={}, cur=0, timer, NAME="", PROG={};
+function rid(){let id=null;try{id=localStorage.getItem("wb_rater")}catch(e){}
+  if(!id||!/^[a-z0-9]{8,40}$/.test(id)){id=Array.from(crypto.getRandomValues(new Uint8Array(10)),b=>(b%36).toString(36)).join("");try{localStorage.setItem("wb_rater",id)}catch(e){}}return id;}
+const RID=rid();
+function seeded(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
+  return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+function order(b){const r=seeded(RID+"|"+b.id),a=b.items.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function save(){$("#saved").textContent="保存中…";clearTimeout(timer);timer=setTimeout(async()=>{
+  try{const r=await fetch("/api/ratings?rater="+RID,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:NAME,data:R})});
+  $("#saved").textContent=r.ok?"已保存 "+new Date().toLocaleTimeString():"保存失败";}catch(e){$("#saved").textContent="保存失败";}},400);}
+function rec(bid,vid){R[bid]=R[bid]||{items:{}};R[bid].items[vid]=R[bid].items[vid]||{ai:null,talk:null,good:null,tags:[],note:""};return R[bid].items[vid];}
+function doneB(b){const r=R[b.id];return r&&b.items.every(it=>r.items[it.vid]&&r.items[it.vid].ai&&r.items[it.vid].good)}
+function briefHTML(b){const x=b.brief;let rows=[];
+  if(b.line==="台词"){const s=x.scene_card||{};
+    rows=[["背景",x.context],["前情",s.previously],["场景",s.location_time],["人物",(s.characters||[]).map(c=>`<b>${esc(c.name)}</b>：${esc(c.profile)}；想要：${esc(c.want)}`).join("<br>")],
+      ["目标",s.scene_goal],["冲突",s.conflict],["beat",(s.beats||[]).map(esc).join(" → ")],["时长",(x.target||{}).duration_sec+" 秒"]];
+  }else if(b.line==="训练"){const d=x.dose||{};
+    rows=[["背景",x.context],["动作",x.topic],["讲述者",x.speaker],["当时情况",x.situation],["节拍",(d.bpm?d.bpm+" BPM，":"")+(d.beats?d.beats+" 拍":"")],
+      ["时间轴",(d.timeline||[]).map(esc).join("<br>")],["画面提示",(x.screen_cues||[]).map(esc).join("；")],["不能写",(x.must_not||[]).map(esc).join("；")]];
+  }else{rows=[["主题",x.topic],["受众",x.audience],["事实",(x.facts||[]).map(f=>`${esc(f.field)}：${esc(f.value)}`).join("<br>")],
+      ["不能写",(x.must_not||[]).map(esc).join("；")],["讲述者",x.speaker],["时长",(x.target||{}).duration_sec+" 秒"]];}
+  return `<div class="brief"><dl>${rows.filter(r=>r[1]).map(([k,v])=>`<dt>${k}</dt><dd>${typeof v==="string"&&!v.includes("<")?esc(v):v}</dd>`).join("")}</dl></div>`;}
+function render(){
+  const cnt={};
+  $("#nav").innerHTML=data.briefs.map((b,i)=>{cnt[b.line]=(cnt[b.line]||0)+1;return `<button class="${i===cur?"on":""} ${doneB(b)?"done":""}" data-i="${i}">${b.line} ${cnt[b.line]} <span class="count">${PROG[b.id]||0}人</span></button>`}).join("");
+  const b=data.briefs[cur];
+  const items=order(b);
+  let h=briefHTML(b)+`<p class="hint">共 ${b.items.length} 份，顺序每个人都不一样。每份回答两题：像不像 AI 写的、写得好不好；标签和备注可选。所有改动自动保存。</p><div class="grid">`;
+  items.forEach((it,k)=>{const r=(R[b.id]&&R[b.id].items[it.vid])||{};
+    h+=`<div class="v" data-v="${it.vid}"><h3>稿 ${k+1}<span>${it.text.length} 字</span></h3><div class="txt">${esc(it.text)}</div>
+    <div class="q">像不像 AI 写的？</div><div class="scale" data-k="ai">${[1,2,3,4,5].map(n=>`<button class="${r.ai===n?"on":""}" data-n="${n}">${n}</button>`).join("")}</div>
+    <div class="ends"><span>肯定是人写的</span><span>肯定是 AI</span></div>
+    <div class="q">写得好不好？</div><div class="scale" data-k="good">${[1,2,3,4,5].map(n=>`<button class="${r.good===n?"on":""}" data-n="${n}">${n}</button>`).join("")}</div>
+    <div class="ends"><span>不能用</span><span>可以直接用</span></div>
+    <div class="tags">${TAGS[b.line].map(t=>`<button class="${(r.tags||[]).includes(t)?"on":""}">${t}</button>`).join("")}</div>
+    <textarea placeholder="备注：哪句好、哪句不对">${esc(r.note||"")}</textarea></div>`;});
+  const best=(R[b.id]||{}).best||"";
+  h+=`</div><div class="best">这一组里最好的是：<select id="best"><option value="">（未选）</option>${items.map((it,k)=>`<option value="${it.vid}" ${best===it.vid?"selected":""}>稿 ${k+1}</option>`).join("")}</select></div>`;
+  $("#main").innerHTML=h;}
+document.addEventListener("click",e=>{const nb=e.target.closest("nav button");if(nb){cur=+nb.dataset.i;render();scrollTo(0,0);return;}
+  const v=e.target.closest(".v");if(!v)return;const b=data.briefs[cur],r=rec(b.id,v.dataset.v);
+  const sc=e.target.closest(".scale button");if(sc){r[sc.parentNode.dataset.k]=+sc.dataset.n;save();render();return;}
+  const tg=e.target.closest(".tags button");if(tg){const t=tg.textContent;r.tags=r.tags.includes(t)?r.tags.filter(x=>x!==t):[...r.tags,t];save();render();}});
+document.addEventListener("input",e=>{const b=data.briefs[cur];
+  if(e.target.matches("textarea")){rec(b.id,e.target.closest(".v").dataset.v).note=e.target.value;save();}
+  if(e.target.id==="name"){NAME=e.target.value;save();return;}
+  if(e.target.id==="best"){R[b.id]=R[b.id]||{items:{}};R[b.id].best=e.target.value;save();}});
+(async()=>{data=await (await fetch("/api/data")).json();
+  const mine=await (await fetch("/api/ratings?rater="+RID)).json();R=mine.data||{};NAME=mine.name||"";$("#name").value=NAME;
+  try{PROG=await (await fetch("/api/progress")).json()}catch(e){}
+  $("#saved").textContent="已载入";render();})();
+</script>
+</body>
+</html>

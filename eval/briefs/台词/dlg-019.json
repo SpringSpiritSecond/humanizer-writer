@@ -1,0 +1,52 @@
+{
+  "id": "dlg-019",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": true
+  },
+  "scene_card": {
+    "previously": "小熊团团的红气球飞走了，挂在了树上。",
+    "location_time": "动画森林，晴天的下午，一棵大树下",
+    "characters": [
+      {
+        "name": "团团",
+        "profile": "小熊，三岁孩子的说话方式，爱重复别人的话",
+        "want": "拿回红气球"
+      },
+      {
+        "name": "跳跳",
+        "profile": "小兔子，跳得高，爱数数",
+        "want": "帮团团够到气球"
+      },
+      {
+        "name": "咕咕",
+        "profile": "猫头鹰，住在树上，说话慢",
+        "want": "告诉大家气球挂在第几根树枝上"
+      }
+    ],
+    "scene_goal": "朋友们一起把气球拿下来",
+    "conflict": "气球挂得太高，跳跳跳了几次都够不到",
+    "beats": [
+      "团团发现气球飞走，指给观众看",
+      "咕咕让大家数树枝，数到第三根",
+      "跳跳踩着团团的肩膀，一二三跳起来",
+      "拿到气球，大家一起说出气球的颜色"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "红气球",
+      "大树"
+    ]
+  },
+  "target": {
+    "duration_sec": 60,
+    "format": "角色名：台词；（动作线）"
+  }
+}

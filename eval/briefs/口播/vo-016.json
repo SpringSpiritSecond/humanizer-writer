@@ -1,0 +1,44 @@
+{
+  "id": "vo-016",
+  "line": "口播",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "platform": "抖音"
+  },
+  "facts": [
+    {
+      "field": "师傅年限",
+      "value": "店里 4 位师傅都剪了 15 年以上",
+      "must_match": true
+    },
+    {
+      "field": "价格",
+      "value": "男士剪发 38 元",
+      "must_match": true
+    },
+    {
+      "field": "预约",
+      "value": "提前一天电话预约",
+      "must_match": true
+    }
+  ],
+  "must_include": {
+    "brand_terms": [
+      "剪刀巷理发"
+    ],
+    "cta": "点视频下方地址导航过来"
+  },
+  "must_not": [
+    "发型工场"
+  ],
+  "audience": "不想被推销办卡、只想剪个头的男生",
+  "speaker": "理发师本人出镜，边剪边聊，有点话痨",
+  "target": {
+    "duration_sec": 90,
+    "chars_per_min": ""
+  }
+}

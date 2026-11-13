@@ -26,7 +26,7 @@ python -m workbench import pipeline/data/runs/for_workbench.json
 | `gates/format.py` | G0：长度/时长、品牌词和 CTA、锁定台词、禁用词 |
 | `gates/compliance.py` | G1：《广告法》第九条通用极限词 + 执法指南第六条豁免分流 |
 | `gates/fidelity.py` | G2：逐字字段、新增数字和承诺、锁定台词和人名道具；beat 占位 |
-| `adapters/` | S1 / S3 / G4 的模型适配器接口和测试用假适配器 |
+| `adapters/` | S1 / S3 / G4 的模型适配器接口、测试用假适配器、OpenAI 兼容的真实模型适配器 |
 | `data/广告法极限词.json` | G1 词典。**行业条款待法务补** |
 | `data/承诺词.json` | G2 用的承诺类说法 |
 | `examples/` | 示例 brief 和稿件（全部虚构） |
@@ -44,8 +44,24 @@ python -m workbench import pipeline/data/runs/for_workbench.json
 
 ## 轮次
 
-第 0 轮的 S3 只改 S2 的命中，没有命中就原样放行，不调用模型。G2 或 G3 打回 S3 时轮次加 1，S3 只改打回的命中，然后从 G1 重跑。轮次到了槽位 D 的 `max_rounds`，或者配置里没有 S3，就转人工。G4 建议重写时，这一期不自动回流，直接转人工。
+第 0 轮的 S3 只改 S2 的命中，没有命中就原样放行，不调用模型；改了就按新文本再跑一次 S2（只出报告）。G2 或 G3 打回 S3 时轮次加 1，S3 只改打回的命中，然后从 G1 重跑。轮次到了槽位 D 的 `max_rounds`，或者配置里没有 S3，就转人工。G4 建议重写时，这一期不自动回流，直接转人工。
 
 ## 接 detect/
 
 `detect/` 合进来后，在配置的 `stages` 里填 `"S2": "detect.stages:s2"`、`"G3": "detect.stages:g3"`（以 detect 的实现为准）即可。runner 会校验返回值是否符合约定，不符合会报出是哪个阶段。
+
+## 接真实模型
+
+`adapters/openai_compat.py` 的 `OpenAICompatAdapter` 走 OpenAI 兼容的 `/chat/completions`，OpenRouter、RelayRouter、DeepSeek、Kimi、GLM 都能用。配置里只写**环境变量名**，不写密钥：
+
+```json
+"generator": {"adapter": "pipeline.adapters.openai_compat:OpenAICompatAdapter",
+              "model": "anthropic/claude-opus-5.5", "vendor": "anthropic",
+              "params": {"base_url": "https://openrouter.ai/api/v1", "api_key_env": "OPENROUTER_API_KEY",
+                         "temperature": 1.0, "max_tokens": 1500, "reasoning_effort": "low"}}
+```
+
+- 接口地址也可以写成环境变量名：`"base_url_env": "RELAYROUTER_BASE_URL"`。
+- skill 正文（SKILL.md）放进 system prompt：S1 用槽位 A，S3 用槽位 B。槽位 C 的改动范围写在 `slots.C.scope` 里，取值为 `in-place` / `bounded` / `structural`。`references/` 下的附属文件不会自动带上。
+- 每次调用的 token 用量记在报告里各阶段的 `metrics.usage`。OpenRouter 还会返回 `cost`。
+- 只做了 S1、S3；G4 的真实裁判还没接。

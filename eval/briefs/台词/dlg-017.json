@@ -1,0 +1,47 @@
+{
+  "id": "dlg-017",
+  "line": "台词",
+  "status": "draft",
+  "fictional": true,
+  "is_example": false,
+  "source": {
+    "human_original": "待补：同事按本 brief 写",
+    "rights": "brief 为自拟；真人稿授权待补",
+    "is_children_content": false
+  },
+  "scene_card": {
+    "previously": "一位老病人的检查结果出来了，情况不好。主任决定先只告诉家属。",
+    "location_time": "住院部医生办公室，上午查房后",
+    "characters": [
+      {
+        "name": "林骁",
+        "profile": "规培医生，二十六岁，和这位病人聊了两周，情绪全写在脸上",
+        "want": "当面把检查结果告诉病人本人"
+      },
+      {
+        "name": "秦主任",
+        "profile": "科室主任，五十多岁，说话少，从不解释两遍",
+        "want": "按家属的意思，先瞒着病人"
+      }
+    ],
+    "scene_goal": "林骁明白主任为什么不让说，接下来的事交给家属",
+    "conflict": "病人今早问林骁结果，林骁答应了下午告诉他；主任说家属已经签了字，要求暂缓",
+    "beats": [
+      "林骁拿着报告找主任",
+      "主任告诉他家属的决定",
+      "林骁要去找病人，主任让他先看家属写的那页字",
+      "林骁把报告放回抽屉"
+    ]
+  },
+  "locked": {
+    "lines": [],
+    "props_and_names": [
+      "检查报告",
+      "家属告知书"
+    ]
+  },
+  "target": {
+    "duration_sec": 120,
+    "format": "角色名：台词；（动作线）"
+  }
+}
