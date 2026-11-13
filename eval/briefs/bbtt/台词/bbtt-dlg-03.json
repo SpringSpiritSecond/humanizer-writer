@@ -9,7 +9,7 @@
     "rights": "BBTT 内部设定",
     "is_children_content": true
   },
-  "context": "BBTT 儿童脑体训练课里的剧情过场，紧接着是一段跟练，跟练时星图会一点点亮起来。场景里的人互相说话：H01 和 H02 是伙伴，H03 在通讯里，梯梯只会发电子音。",
+  "context": "BBTT 儿童脑体训练课里的剧情过场，看的是孩子。H01 和 H02 是一起执行任务的同伴，H03 是在通讯里带队的教官，梯梯是他们的机器人伙伴，只会发电子音。",
   "scene_card": {
     "previously": "孩子们决定反击，星舰已经调头，舰首主炮正在充能。",
     "location_time": "日冕跃迁舱，舰内重力开启，穹顶是导航星图",
@@ -57,5 +57,5 @@
     "duration_sec": 40,
     "format": "角色名：台词；（动作线）"
   },
-  "brief_version": "v2"
+  "brief_version": "v3"
 }

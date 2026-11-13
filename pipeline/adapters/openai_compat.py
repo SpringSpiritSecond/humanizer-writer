@@ -54,10 +54,16 @@ class AdapterError(RuntimeError):
     pass
 
 
+# 写稿模型看不到的字段：管理字段，以及“只用来检查”的约束。
+# 第三轮盲审发现：把“不能用左右脑失衡来解释”写进提示词，15 份稿子全部提到了“左右脑”。
+# 所以不能出现的内容（must_not、check_only）不给写稿模型看，写完由闸门检查。
+HIDDEN_FROM_WRITER = ("source", "status", "fictional", "is_example", "notes_admin", "brief_version",
+                      "must_not", "check_only")
+
+
 def _public_brief(brief: dict) -> dict:
-    """去掉只有管理员能看的字段，以及下划线开头的说明字段。"""
-    return {k: v for k, v in brief.items()
-            if k not in ("source", "status", "fictional", "is_example", "notes_admin") and not k.startswith("_")}
+    """写稿模型能看到的 brief：只有要讲的事实和场景。"""
+    return {k: v for k, v in brief.items() if k not in HIDDEN_FROM_WRITER and not k.startswith("_")}
 
 
 class OpenAICompatAdapter(ModelAdapter):

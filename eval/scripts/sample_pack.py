@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from detect.stages import g3, s2  # noqa: E402
+from detect.trace import annotate, template_ratio  # noqa: E402
 from pipeline.adapters.base import resolve_skill  # noqa: E402
 from pipeline.adapters.openai_compat import AdapterError, OpenAICompatAdapter  # noqa: E402
 from pipeline.textutil import normalize  # noqa: E402
@@ -53,6 +54,7 @@ def one(arm: dict, cfg: dict, brief: dict, out: Path) -> dict:
     ad = OpenAICompatAdapter("generator", m["model"], m["vendor"], params, {"A": slot})
     line = brief["line"]
     rec = {"arm": arm["id"], "model": m["model"], "skills": arm["skills"], "brief_id": brief["id"], "line": line,
+           "sample": arm.get("_sample", 0),
            "orchestration": {k: arm[k] for k in ("placement", "mode", "plan_skills") if arm.get(k)}}
     t0 = time.monotonic()
     if m.get("external"):
@@ -86,7 +88,7 @@ def one(arm: dict, cfg: dict, brief: dict, out: Path) -> dict:
     rec.update(text=text, chars=len(text), seconds=round(time.monotonic() - t0, 1),
                usage=None if m.get("external") else ad.describe()["usage"],
                s2_hits=[{k: h.get(k) for k in ("rule", "excerpt", "severity")} for h in s2(ctx)["hits"]],
-               g3_metrics=g3(ctx)["metrics"])
+               g3_metrics=g3(ctx)["metrics"], trace=annotate(text, brief))
     return rec
 
 
@@ -97,6 +99,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--only-line", default=None)
+    ap.add_argument("--samples", type=int, default=1, help="每个组合每个 brief 写几份")
     ap.add_argument("--briefs-only", nargs="*", default=None, help="只用这些 brief id")
     ap.add_argument("--resume", action="store_true", help="保留 results.json 里已成功的，只补跑缺的和失败的")
     a = ap.parse_args()
@@ -113,13 +116,15 @@ def main():
             for bf in sorted((Path(arm.get("briefs") or a.briefs) / line).glob("*.json")):
                 if a.briefs_only and bf.stem not in a.briefs_only:
                     continue
-                jobs.append((arm, load(bf)))
+                for i in range(a.samples):
+                    arm_i = arm if a.samples == 1 else {**arm, "_sample": i}
+                    jobs.append((arm_i, load(bf)))
     results = []
     prev = out / "results.json"
     if a.resume and prev.exists():
         results = [r for r in load(prev) if r.get("text")]
-        have = {(r["arm"], r["brief_id"]) for r in results}
-        jobs = [(arm, b) for arm, b in jobs if (arm["id"], b["id"]) not in have]
+        have = {(r["arm"], r["brief_id"], r.get("sample", 0)) for r in results}
+        jobs = [(arm, b) for arm, b in jobs if (arm["id"], b["id"], arm.get("_sample", 0)) not in have]
         print(f"续跑：已有 {len(results)} 份成功，补跑 {len(jobs)} 份")
     print(f"共 {len(jobs)} 份，{a.workers} 路并发")
     total = len(results) + len(jobs)
@@ -130,6 +135,15 @@ def main():
             results.append(r)
             flag = "错误：" + r["error"][:80] if r.get("error") else f"{r['chars']} 字，{r['seconds']}s"
             print(f"  [{len(results)}/{total}] {r['brief_id']} · {r['arm']} → {flag}", flush=True)
+
+    groups = {}
+    for r in results:
+        if r.get("text"):
+            groups.setdefault((r["arm"], r.get("sample", 0)), {})[r["brief_id"]] = r
+    for g in groups.values():
+        tr = template_ratio({b: r["text"] for b, r in g.items()})
+        for b, r in g.items():
+            r.setdefault("trace", {})["template_ratio"] = tr.get(b)
 
     rng = random.Random(secrets.randbits(64))
     key, blind = {}, {"briefs": []}
