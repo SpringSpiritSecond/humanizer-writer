@@ -16,7 +16,7 @@ from detect.trace import annotate
 from pipeline.adapters.base import resolve_skill
 from pipeline.adapters.openai_compat import OpenAICompatAdapter, _public_brief
 from pipeline.gates.brief import style_directives
-from pipeline.textutil import normalize
+from pipeline.textutil import normalize, numbers
 
 ROOT = Path(__file__).resolve().parents[1]
 PROFILES = {"台词": "profiles/台词.json", "训练": "profiles/训练.json", "口播": "profiles/口播.json"}
@@ -128,9 +128,11 @@ def check_draft(text: str, brief: dict, cfg: dict, checker=None) -> dict:
 
     fact_text = " ".join(_strings(brief.get("facts")))
     brief_text = " ".join(_strings(_public_brief(brief)))
+    # 按数值比：“2 周”写成“两周”、“15 分钟”写成“十五分钟”都算写对了（新人试用时，3 份稿子都因“两周”被误判不过）
+    text_vals = {d["value"] for d in numbers(CLOCK_MIN.sub("", text))}
     for num in sorted(_nums(fact_text)):
-        if num not in text:
-            fails.append(f"事实里的数字 {num} 没写进稿子（或写法不一样）")
+        if float(num.rstrip("%")) not in text_vals:
+            fails.append(f"事实里的数字 {num} 没写进稿子（或者写成了别的数）")
     extra = sorted(_nums(text) - _nums(brief_text))
     if extra and brief["line"] != "训练":
         flags.append("brief 里没有的数字：" + "、".join(extra) + "（是换算还是编的？）")

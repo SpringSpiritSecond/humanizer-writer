@@ -84,3 +84,12 @@ def test_clock_minutes_are_not_new_numbers():
     b = {**BRIEF, "facts": [{"field": "时间", "value": "周四上午 9 点到下午 3 点"}]}
     r = check_draft("周四上午 9:00 到下午 3:00 停水。", b, CFG)
     assert not any("00" in f for f in r["flags"]) and r["pass"]
+
+
+def test_chinese_numerals_count_as_written():
+    b = {**BRIEF, "facts": [{"field": "停课", "value": "中间需要停 2 周的课"}, {"field": "时长", "value": "每次 15 分钟"},
+                             {"field": "比例", "value": "复购占 38%"}]}
+    r = check_draft("要停两周的课，每次十五分钟，复购占百分之三十八，也就是 38%。", b, CFG)
+    assert r["pass"], r["fails"]
+    r2 = check_draft("要停三周的课，每次十五分钟，复购 38%。", b, CFG)
+    assert not r2["pass"] and any("2" in f for f in r2["fails"])
