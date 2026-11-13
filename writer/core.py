@@ -26,7 +26,7 @@ CJK = re.compile(r"[一-鿿]")
 
 EXTRA_PROMPT = (
     "下面是写稿依据的材料，和照着它写出来的一篇稿子。逐句对照，找出稿子里材料没有提供的事实、安排、承诺、"
-    "已经做过的事、时间、地点、人物或数字。\n"
+    "已经做过的事、时间、地点、人物或数字，也包括把材料里的说法说得更具体（例如材料写“周四”，稿子写成“本周四”或具体日期）。\n"
     "这些不算多出来的：对材料的同义改写或换算；按常识给对方的提醒和建议（例如提前储水）；礼貌用语。\n"
     "只输出 JSON 数组，每项是 {\"句子\": 稿子原句, \"多出来的\": 材料里没有的那部分}；没有就输出 []。")
 
@@ -209,6 +209,6 @@ def _write_report(out_dir: Path, brief: dict, report: dict):
             L += [f"- 待确认：“{e.get('多出来的', '')}”（{e.get('句子', '')}）——brief 里没有" for e in d.get("extra", [])]
             if not d.get("extra_checked"):
                 L.append("- 没做“多出来的内容”检查（没有可用的模型），请自己对照 brief 看一遍")
-            L += [f"- 提示：{x}" for x in d["flags"]]
+            L += [f"- 提示：{x}" for x in d["flags"]] or ["- 提示：无"]
             L += ["", "```", d["text"], "```", ""]
     (out_dir / "report.md").write_text("\n".join(L), encoding="utf-8")
