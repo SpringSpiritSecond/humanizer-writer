@@ -35,7 +35,7 @@ python -m writer run --brief writer/examples/科普-双侧整合.json
 
 - `check` 只检查 brief，不花钱。
 - `run` 会写 3 份（`--n` 可以改），结果放在 `writer/out/<brief id>-<时间>/`：`稿1.txt`…`稿3.txt`、`report.md`、`report.json`。
-- 需要环境变量 `RELAYROUTER_BASE_URL`、`RELAYROUTER_API_KEY`（Gemini）。每份约半美分。
+- 默认用 Gemini 4 Argon（推荐），需要环境变量 `RELAYROUTER_BASE_URL`、`RELAYROUTER_API_KEY`，每份约半美分。想换模型：复制一份 `config.json`，改 `model`（任何 OpenAI 兼容接口都行），运行时加 `--config <新配置>`。
 
 已经有一份稿子，只想检查：
 
