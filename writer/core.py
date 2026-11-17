@@ -180,7 +180,7 @@ def run(brief_path: Path, out_dir: Path, cfg: dict, n: int | None = None, adapte
     if not bc["ok"]:
         _write_report(out_dir, brief, report)
         return report
-    texts, usage = write(brief, cfg, n or cfg.get("n", 3), adapter=adapter)
+    texts, usage = write(brief, cfg, n or cfg.get("n", 1), adapter=adapter)
     report["usage"] = usage
     if checker == "auto":
         checker = make_adapter(cfg, with_skills=False) if cfg.get("extra_check", True) else None
