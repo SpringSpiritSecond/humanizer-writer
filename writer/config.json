@@ -1,5 +1,5 @@
 {
-  "_说明": "当前推荐配置（依据 2026-11-12 至 11-13 四轮盲审）：Gemini 4 Argon 写稿；skill 用 scene-anchored（和不加打平，但能把口语腔和提示词痕迹压到 0）；只写稿，不自动改稿；每次写 3 份，由人挑。",
+  "_说明": "当前推荐配置（依据 2026-11-12 至 11-13 四轮盲审）：Gemini 4 Argon 写稿；skill 用 scene-anchored（和不加打平，但能把口语腔和提示词痕迹压到 0）；只写稿，不自动改稿；每次写 1 份（2026-11-17 起，维护者决定不再出多个版本；需要时可用 --n 多写几份）。",
   "model": {
     "name": "gemini-4-argon",
     "vendor": "google",
@@ -10,7 +10,9 @@
     "reasoning_effort": "low",
     "timeout": 300
   },
-  "skills": ["scene-anchored"],
-  "n": 3,
+  "skills": [
+    "scene-anchored"
+  ],
+  "n": 1,
   "chars_tolerance": 0.3
 }

@@ -1,4 +1,4 @@
-"""python -m writer run --brief <brief.json> [--out <目录>] [--n 3] [--config writer/config.json]
+"""python -m writer run --brief <brief.json> [--out <目录>] [--n 1] [--config writer/config.json]
 python -m writer check --brief <brief.json>              # 只检查 brief，不写稿
 python -m writer check-text --brief <brief.json> --text <稿子.txt> [--no-model]   # 检查一份现成稿子
 """
